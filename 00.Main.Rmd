@@ -1,0 +1,422 @@
+---
+title: "Main"
+author: "Ann Atwater"
+date: "2023-06-02"
+output: html_document
+---
+
+```{r}
+remove(list = ls());
+
+library(tidyverse)
+library(ggplot2)
+library(data.table)
+library(ggmap)
+library(purrr)
+library(lubridate)
+library(reshape2)
+library(texreg)
+library(gtsummary)
+library(kableExtra)
+library(reticulate)
+library(readr)
+library(lmtest)
+library(corrplot)
+library(foreach)
+library(doParallel)
+library(texreg)
+library(scales)
+library(gt)
+library(ivreg)
+library(estimatr)
+library(sandwich)
+library(stargazer)
+library(stringr)
+
+source("04.Code/Data_Input_Functions.R")
+source("04.Code/Mapping_Functions.R")
+source("04.Code/T100_Functions.R")
+source("04.Code/DB1B_Functions.R")
+source("04.Code/descriptive_functions.R")
+source("04.Code/MergerSim_Summing_MS.R")
+source("04.Code/Simulation_Figures.R")
+source("04.Code/SummaryTables.R")
+source("04.Code/db1b_graphs.R")
+source("04.Code/Plane_Graphs.R")
+source("04.Code/EntryEffectsAnalysis.R")
+source("04.Code/Merger_Simulation.R")
+source("04.Code/Stance_Analysis_Functions.R")
+source("04.Code/NEA_Code.R")
+source("04.Code/NEA_Graphs.R")
+source("04.Code/Misc_Graphs.R")
+source("04.Code/Merger_Simulation_Graphs.R")
+source("04.Code/Instrument_Compare_Table.R")
+source("04.Code/Demand_Estimation.R")
+
+# Load In Needed Python Package
+# Set HiPerGator Path
+# path_to_python <- "/usr/bin/python3"
+# use_python(path_to_python)
+use_condaenv("/home/annatwater/.conda/envs/jetblue")
+
+# py_install(packages = c("pyblp", "numpy", "transformers"), pip = TRUE)
+
+# Python Path: Work PC
+# use_condaenv("C:/Users/annatwater/.conda/envs/jetblue_desktop")
+
+py <- import_builtins()
+pyblp <- import("pyblp", convert = FALSE)
+np <- import("numpy")
+scipy <- import("scipy")
+pd <- import("pandas")
+transformers <- import("transformers")
+
+# Set up Parallel Computing Backend
+registerDoParallel(cores = 1)
+pycores <<- 1L
+
+# Used for Model Estimation Across Specifications - Need Constant Throughout
+# Define Model
+linear_formula <- '0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Tourism + C(Year_Quarter_Effect) + C(Carrier)'
+linear_component_rcl <- pyblp$Formulation(linear_formula)
+linear_component_logit <- pyblp$Formulation(linear_formula)
+supply_component <- pyblp$Formulation("1 + MktMilesFlown + NonStop + Destination_Firm_Service_Ratio", absorb = "C(Year_Quarter_Effect) + C(Carrier)", absorb_method = "lsmr")
+  
+# nonlinear_component <- pyblp$Formulation("1 + prices + NonStop")
+ nonlinear_component <- pyblp$Formulation("0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq")
+
+# Instruments as Follows: First Row: Price
+
+instruments <- c("GasMiles", "GasMiles_ExtraMiles", "GasMiles_Origin_Prescence", "GasMiles_Hub", "Num_Products_In_Market")
+```
+
+# Handle Data
+```{r eval = TRUE}
+# Prep Control Files
+if(!file.exists("02.Intermediate/Clean_Codebook.Rds")){
+  clean_codebook()
+}
+
+load_jet_fuel()
+load_jetfuel_financial_reports() 
+
+create_msa_pop_table()
+
+
+if(!file.exists("02.Intermediate/Compile_T100.Rds")){
+clean_T100(); gc()
+}
+
+if(!file.exists("02.Intermediate/Fleet_Compilation.rds")){
+  clean_fleet();
+}
+
+if(!file.exists("02.Intermediate/CleanedComments.rds")){
+  comments_handle()
+}
+
+unify_DB1B_Ticket(target = "02.Intermediate/Compile_DB1B_Ticket.rds"); gc();
+
+
+clean_price_index()
+clean_income()
+covid_read_in()
+state_pop_handle()
+```
+
+# DB1B Cleaning Functions
+```{r}
+  unify_DB1B(target = "02.Intermediate/Construct_DB1B/DB1B_Initial.Rds"); gc();
+  clarify_DB1B(input = "02.Intermediate/Construct_DB1B/DB1B_Initial.Rds",
+               output = "02.Intermediate/Construct_DB1B/DB1B_Clarified.Rds"); gc();
+  airport_service_ratios(input = "02.Intermediate/Construct_DB1B/DB1B_Clarified.Rds",
+                         output = "02.Intermediate/Airport_Service_Ratios.Rds")
+  condense_db1b(input = "02.Intermediate/Construct_DB1B/DB1B_Clarified.Rds",
+                output = "02.Intermediate/Construct_DB1B/DB1B_Condensed.rds")
+  identify_large_airports(input = "02.Intermediate/Construct_DB1B/DB1B_Clarified.Rds",
+                output = "03.Output/Large_Airports.csv")
+  add_control_variables(input = "02.Intermediate/Construct_DB1B/DB1B_Condensed.rds",
+                        output = "02.Intermediate/DB1B_With_Controls.Rds"); gc();
+```
+
+
+# Data Visualization
+```{r}
+# make_passenger_maps(); gc();
+# t100_graphs(); gc(); 
+plane_graphs(); gc(); 
+db1b_graphics(); gc()
+# overlap_graphs(); gc();
+firm_revenue_graphs(); gc();
+```
+
+# Descriptive Findings generate_airport_shares(); gc(); gc(); 
+```{r}
+determine_market_firm_counts()
+markets_by_hhi_increase_table()
+seat_removal_table()
+spirit_jetblue_overlap_cities()
+oil_compare_graph()
+lcc_in_market_graph()
+legacy_southwest_other_graph()
+
+```
+
+# Stance Detection Related Analyses
+```{r}
+graph_stance()
+comment_submitted_graph()
+stance_summary_statistics()
+```
+
+# Demand Estimation
+# Process Data
+```{r}
+# Post-Pandemic
+merger_sim_data_generate(years_allowed = 2021:2023,
+                         output_file = "02.Intermediate/Product_Data.rds")
+summary_statistics_product_level()
+summary_statistics_product_level_slim();
+summary_statistics_market_level()
+summary_statistics_market_level_slim()
+product_data_descriptive_plots()
+instrument_comparison_table()
+
+
+# Pre-Pandemic
+merger_sim_data_generate(years_allowed = 2017:2019,
+                         output_file = "02.Intermediate/prepandemic.rds")
+summary_statistics_product_level(input = "02.Intermediate/prepandemic.rds",
+                                 output = "06.Tables/prepandemic_SummaryStatistics_Product.tex")
+summary_statistics_product_level_slim(input = "02.Intermediate/prepandemic.rds",
+                                     output = "06.Tables/prepandemic_SummaryStatistics_Product_Slim.tex")
+summary_statistics_market_level(input = "02.Intermediate/prepandemic.rds",
+                                output = "06.Tables/prepandemic_SummaryStatistics_Market.tex")
+summary_statistics_market_level_slim(input = "02.Intermediate/prepandemic.rds",
+                                output = "06.Tables/prepandemic_SummaryStatistics_Market_Slim.tex")
+instrument_comparison_table(input_file = "02.Intermediate/prepandemic.rds",
+                            output_file = "06.Tables/prepandemic_InstrumentTable.tex")
+
+# 2019
+merger_sim_data_generate(years_allowed =2019,
+                         output_file = "02.Intermediate/2019_data.rds")
+# instrument_comparison_table(input_file = "02.Intermediate/2019_data.rds",
+#                             output_file = "06.Tables/2019_InstrumentTable.tex")
+
+# 2018 - 2019
+merger_sim_data_generate(years_allowed =2018:2019,
+                         output_file = "02.Intermediate/1819_data.rds")
+# instrument_comparison_table(input_file = "02.Intermediate/1819_data.rds",
+#                             output_file = "06.Tables/1819_InstrumentTable.tex")
+
+```
+
+```{r}
+rho_instrument <- c("Num_Products_In_Market")
+origin_interactions <- c("Origin_Hub", "MktMiles_OriginHub", "MktMilesSq_OriginHub",
+                        "NonStop_OriginHub")
+    destination_interactions <- c("Destination_Hub","MktMiles_DestinationHub", 
+                    "MktMilesSq_DestinationHub", "NonStop_DestinationHub")
+    hub_interactions <- c(origin_interactions, destination_interactions)
+    exog_interactions <- c("MktMiles_NonStop","MktMiles_Sq_NonStop","NonStop_Origin_Share","NonStop_ExtraMiles",
+                            "MktMiles_Sq_Interact", "MktMiles_Origin_Share",
+                           "MktMiles_Extra","OriginRatio_Extra")
+  
+  blp_instruments <- "Average_Other_Distance +Average_Other_Distance_Square + Rival_Direct +
+  Average_Rival_Origin_Ratio + Average_Rival_Dest_Ratio + "
+
+  instruments <- c(rho_instrument, destination_interactions, exog_interactions)
+```
+
+
+# Nested Logit
+```{r}
+# Post-Pandemic
+blp_logit_iv(additional_instruments = c(hub_interactions, exog_interactions,
+                                        rho_instrument),
+             model = pyblp$Formulation('0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Tourism + C(Year_Quarter_Effect) + C(Carrier)'),
+             nested = TRUE, output_file = "03.Output/nested_logit_iv.pickle")
+export_nested_logit_to_latex()
+
+# Pre-Pandemic
+blp_logit_iv(additional_instruments = instruments,
+             input_file = "02.Intermediate/prepandemic.rds",
+             model = linear_component_logit,
+             nested = TRUE, output_file = "03.Output/pre_pandemic_nested_logit_iv.pickle")
+export_nested_logit_to_latex(nl_in = "03.Output/pre_pandemic_nested_logit_iv.pickle",
+                             data_in = "02.Intermediate/prepandemic.rds",
+                             output_table = "06.Tables/pre_pandemic_nested_logit.tex")
+
+# 2019 
+blp_logit_iv(additional_instruments = c("GasMiles", "GasMiles_ExtraMiles", "GasMiles_Origin_Prescence",
+                                        "GasMiles_Hub", "GasMiles_LCC", 
+                                   "Rival_Products_In_Market"),
+             input_file = "02.Intermediate/2019_data.rds",
+             model = linear_component_logit,
+             nested = TRUE, output_file = "03.Output/2019_nested_logit_iv.pickle")
+
+```
+
+
+# Random Coefficient Nested Logit
+```{r}
+# Post-Pandemic
+blp_rcl(additional_instruments = c(hub_interactions, exog_interactions,
+                                        rho_instrument), 
+        linear = linear_component_rcl,
+        nonlinear = nonlinear_component, nested = TRUE,
+        output_file = "03.Output/random_coeff_nested_logit_fs_results.pickle",
+        precision = 1e-10); 
+rcl_second_step(input = "03.Output/random_coeff_nested_logit_fs_results.pickle",
+                output = "03.Output/nested_rcl_optimal.pickle",
+                 precision = 1e-12)
+export_rcl_output_to_latex(rcl_in = "03.Output/nested_rcl_optimal.pickle",
+                           data_in = "02.Intermediate/Product_Data.rds",
+                           output_table = "06.Tables/PostPandemic_RCL_Results.tex")
+
+# Pre-Pandemic
+blp_rcl(additional_instruments = c("GasMiles", "GasMiles_ExtraMiles", 
+                                   "GasMiles_Origin_Prescence", "GasMiles_Hub",
+                                   "Num_Products_In_Market",
+                                   "MktMiles_Origin_Share", "MktMiles_Sq_Origin_Share",
+                                   "MktMiles_NonStop", "MktMiles_Sq_NonStop", "MktMiles_Extra",
+                                   "NonStop_Origin_Share", "OriginRatio_Extra"), 
+        input_file = "02.Intermediate/prepandemic.rds",
+        linear = linear_component_rcl,
+        nonlinear = nonlinear_component, 
+        nested = TRUE, precision = 1e-6,
+        output_file = "03.Output/pre_pandemic_random_coeff_nested_logit_fs_results.pickle")
+
+rcl_second_step(input = "03.Output/pre_pandemic_random_coeff_nested_logit_fs_results.pickle",
+                output = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+                precision = 1e-12)
+export_rcl_output_to_latex(rcl_in = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+                           data_in = "02.Intermediate/prepandemic.rds",
+                           output_table = "06.Tables/Prepandemic_RCL_Results.tex")
+
+# 2019
+blp_rcl(additional_instruments = c("GasMiles", "GasMiles_ExtraMiles", "GasMiles_Origin_Prescence", "GasMiles_Hub",
+                                   "GasMiles_LCC", 
+                                   "MktMiles_Origin_Share", "MktMiles_Sq_Origin_Share", 
+                                   "MktMiles_NonStop", "MktMiles_Sq_NonStop", "NonStop_Origin_Share",
+                                   "Num_Products_In_Market"), 
+        input_file = "02.Intermediate/2019_data.rds",
+        linear = linear_component_rcl,
+        nonlinear = nonlinear_component, 
+        nested = TRUE,
+        output_file = "03.Output/2019_random_coeff_nested_logit_fs_results.pickle",
+        precision = 1e-8)
+rcl_second_step(input = "03.Output/2019_random_coeff_nested_logit_fs_results.pickle",
+                output = "03.Output/2019_nested_rcl_optimal.pickle",
+                precision = 1e-17)
+export_rcl_output_to_latex(rcl_in = "03.Output/2019_nested_rcl_optimal.pickle",
+                           data_in = "02.Intermediate/2019_data.rds",
+                           output_table = "06.Tables/2019_RCL_Results.tex")
+
+# 2018- 2019 
+blp_rcl(additional_instruments = c("GasMiles", "GasMiles_ExtraMiles", "GasMiles_Origin_Prescence", "GasMiles_Hub",
+                                   "GasMiles_LCC", 
+                                   "MktMiles_Origin_Share", "MktMiles_Sq_Origin_Share", 
+                                   "MktMiles_NonStop", "MktMiles_Sq_NonStop", "NonStop_Origin_Share",
+                                   "Num_Products_In_Market"), 
+        input_file = "02.Intermediate/1819_data.rds",
+        linear = linear_component_rcl,
+        nonlinear = nonlinear_component, 
+        nested = TRUE,
+        output_file = "03.Output/1819_random_coeff_nested_logit_fs_results.pickle",
+        precision = 1e-24)
+rcl_second_step(input = "03.Output/1819_random_coeff_nested_logit_fs_results.pickle",
+                output = "03.Output/1819_nested_rcl_optimal.pickle",
+                precision = 1e-19)
+export_rcl_output_to_latex(rcl_in = "03.Output/1819_nested_rcl_optimal.pickle",
+                           data_in = "02.Intermediate/1819_data.rds",
+                           output_table = "06.Tables/1819_RCL_Results.tex")
+
+# Export Elasticity Comparison Table
+elasticity_compare_table()
+```
+```{r}
+combined_rcl_output_table()
+combined_rcl_output_table(post_in = "03.Output/random_coeff_nested_logit_fs_results.pickle",
+                          pre_in = "03.Output/pre_pandemic_random_coeff_nested_logit_fs_results.pickle", 
+                          output_table = "06.Tables/Demand_Unoptimal.tex")
+```
+
+
+# Merger Simulation
+```{r}
+# Post-Pandemic
+merger_simulation_basic()
+merger_results_basic()
+merger_simulation_advanced()
+merger_results_table()
+change_minimum_fare()
+merger_change_pass_graph()
+
+# Pre-Pandemic
+merger_simulation_basic(rcl_in = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+                           data_in = "02.Intermediate/prepandemic.rds",
+                           data_out = "03.Output/PrePandemic_Basic_Merger_Sim_Data.rds")
+merger_results_basic(merger_data = "03.Output/PrePandemic_Basic_Merger_Sim_Data.rds",
+                                 observed_data = "02.Intermediate/prepandemic.rds", 
+                                 rcl_file = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+                                 table_out = "06.Tables/PrePandemicMerger_Basic.tex")
+merger_simulation_advanced(rcl_in = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+                           data_in = "02.Intermediate/prepandemic.rds",
+                           data_out = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds")
+merger_results_table(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
+                     observed_data = "02.Intermediate/prepandemic.rds",
+                     table_out = "06.Tables/PrePandemic_Merger_Results.tex",
+                     rcl = "03.Output/pre_pandemic_nested_rcl_optimal.pickle")
+change_minimum_fare(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
+                    observed_data = "02.Intermediate/prepandemic.rds",
+                    graph_out = "05.Figures/PrePandemic_Merger_Change_MinimumFare.pdf")
+merger_change_pass_graph(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
+                    observed_data = "02.Intermediate/prepandemic.rds",
+                    graph_out = "05.Figures/PrePandemic_ChangePassengers.pdf")
+
+# 2019
+merger_simulation_advanced(rcl_in = "03.Output/2019_nested_rcl_optimal.pickle",
+                           data_in = "02.Intermediate/2019_data.rds",
+                           data_out = "03.Output/2019_Adv_Merger_Sim_Data.rds")
+merger_results_table(merger_data = "03.Output/2019_Adv_Merger_Sim_Data.rds",
+                      observed_data = "02.Intermediate/2019_data.rds",
+                     table_out = "06.Tables/2019_Merger_Results.tex",
+                     rcl = "03.Output/2019_nested_rcl_optimal.pickle")
+change_minimum_fare(merger_data = "03.Output/2019_Adv_Merger_Sim_Data.rds",
+                    observed_data = "02.Intermediate/2019_data.rds",
+                    graph_out = "05.Figures/2019_Merger_Change_MinimumFare.pdf")
+
+
+```
+
+# Generate Summary Statistics Tables
+```{r}
+regions_of_note()
+hhi_airport_summary()
+hhi_airport_summary(input = "02.Intermediate/HHI_Airport_LCC_Market.Rds",
+                    output = "06.Tables/HHI_LCC_SummaryStats.tex",
+                    mode = "LCC")
+major_city_table()
+```
+
+# North East Alliance Related Analysis
+```{r}
+nea_market_mile_price()
+avg_mile_price_evolve_graph()
+# avg_mile_price_evolve_graph_onestop()
+nea_did_construct_data(); gc()
+market_yield_reg();
+market_fare_reg();
+nea_zou_1()
+nea_op_carrier_switch(); gc()
+nea_changes_recorded_estimate()
+# nea_code_sharing_itenaries(); 
+nea_price_neutrality();
+nea_price_neutrality_yield()
+nea_revenue()
+
+# West Coast International Alliance Tables
+# share_wcia_table()
+```
+
