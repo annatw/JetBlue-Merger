@@ -207,12 +207,19 @@ condense_db1b <- function(input, output, fares_min = 15, fares_max = 2000){
   
   DB1B[MktFare < fares_min, MktFare := NA] 
   
-  # In Line with Turner, Bet (2021 Both), remove fares greater than $1500 to avoid 'key punch errors'
-  print(paste("High Fares:", nrow(DB1B[MktFare > fares_max,]) / orig_count * 100, " Of Sample"))
+  # Remove All Tickets in Top/Bottom 1 Percent of Fare, Yield For a Quarter
+  DB1B[, Yield := MktFare / MktMilesFlown]
+  DB1B[, Bottom.Fare.Cutoff := unname(quantile(x = MktFare, probs = 0.01, na.rm = TRUE)), by = c("Year", "Quarter")]
+  DB1B[, Top.Fare.Cutoff := unname(quantile(x = MktFare, probs = 0.99, na.rm = TRUE)), by = c("Year", "Quarter")]
+  DB1B[, Bottom.Yield.Cutoff := unname(quantile(x = Yield, probs = 0.01, na.rm = TRUE)), by = c("Year", "Quarter")]
+  DB1B[, Top.Yield.Cutoff := unname(quantile(x = Yield, probs = 0.99, na.rm = TRUE)), by = c("Year", "Quarter")]
+
+  DB1B[MktFare < Bottom.Fare.Cutoff, MktFare := NA]
+  DB1B[Yield < Bottom.Yield.Cutoff, MktFare := NA]
+  DB1B[MktFare > Top.Fare.Cutoff, MktFare := NA]
+  DB1B[Yield > Top.Yield.Cutoff, MktFare := NA]
   
-  DB1B[MktFare > fares_max, MktFare := NA]
-  
-  # Restrict to two layovers or fewer
+  # Restrict to three layovers or fewer
   print(paste("High Legs:", nrow(DB1B[MktCoupons >= 4,]) / orig_count * 100, " Of Sample"))
   DB1B[MktCoupons >= 4, MktFare := NA]
   
@@ -290,9 +297,7 @@ airport_service_ratios <- function(input = "02.Intermediate/Construct_DB1B/DB1B_
   nonstop_plane <- merge(nonstop_plane, nonstop_plane_t, by = c("Year", "Quarter", "Origin"),
                          all.x = TRUE)
   nonstop_plane[, Firm.Ratio := Firm.Destinations / Destinations.Available * 100]
-  
-  # Handle Some Codesharing Agreements
-  
+ 
   ratio_data <- nonstop_plane %>%
     select(Year, Quarter, Carrier, Origin, Firm.Destinations, Firm.Ratio) %>% unique() %>%
     as.data.table()
@@ -606,7 +611,7 @@ add_control_variables <- function(input = "02.Intermediate/Construct_DB1B/DB1B_C
   # Adjust to Compile Minor Carriers:
   keep_carriers <- c("American Airlines Inc.", "United Air Lines Inc.",
                      "Delta Air Lines Inc.",
-                     "JetBlue Airways", "Alaska Airlines Inc.",
+                     "JetBlue Airways", # "Alaska Airlines Inc.",
                      "Southwest Airlines Co.", "Spirit Air Lines")
 
   plane_data[!Carrier %in% keep_carriers, Carrier := "Minor Carrier"]

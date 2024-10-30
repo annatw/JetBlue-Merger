@@ -179,6 +179,7 @@ summary_statistics_product_level()
 summary_statistics_product_level_slim();
 summary_statistics_market_level()
 summary_statistics_market_level_slim()
+summary_product_sp_jb_focus()
 product_data_descriptive_plots()
 instrument_comparison_table()
 
@@ -196,6 +197,8 @@ summary_statistics_market_level_slim(input = "02.Intermediate/prepandemic.rds",
                                 output = "06.Tables/prepandemic_SummaryStatistics_Market_Slim.tex")
 instrument_comparison_table(input_file = "02.Intermediate/prepandemic.rds",
                             output_file = "06.Tables/prepandemic_InstrumentTable.tex")
+summary_product_sp_jb_focus(input = "02.Intermediate/prepandemic.rds",
+                            output = "06.Tables/prepandemic_SummaryStatistics_Product_FocusFirms.tex")
 
 # 2019
 merger_sim_data_generate(years_allowed =2019,
@@ -203,11 +206,6 @@ merger_sim_data_generate(years_allowed =2019,
 # instrument_comparison_table(input_file = "02.Intermediate/2019_data.rds",
 #                             output_file = "06.Tables/2019_InstrumentTable.tex")
 
-# 2018 - 2019
-merger_sim_data_generate(years_allowed =2018:2019,
-                         output_file = "02.Intermediate/1819_data.rds")
-# instrument_comparison_table(input_file = "02.Intermediate/1819_data.rds",
-#                             output_file = "06.Tables/1819_InstrumentTable.tex")
 
 ```
 
@@ -267,10 +265,7 @@ blp_rcl(additional_instruments = c(hub_interactions, exog_interactions,
         nonlinear = nonlinear_component, nested = TRUE,
         output_file = "03.Output/random_coeff_nested_logit_fs_results.pickle",
         precision = 1e-10); 
-rcl_second_step(input = "03.Output/random_coeff_nested_logit_fs_results.pickle",
-                output = "03.Output/nested_rcl_optimal.pickle",
-                 precision = 1e-12)
-export_rcl_output_to_latex(rcl_in = "03.Output/nested_rcl_optimal.pickle",
+export_rcl_output_to_latex(rcl_in = "03.Output/03.Output/random_coeff_nested_logit_fs_results.pickle",
                            data_in = "02.Intermediate/Product_Data.rds",
                            output_table = "06.Tables/PostPandemic_RCL_Results.tex")
 

@@ -127,22 +127,20 @@ blp_rcl <- function(input_file = "02.Intermediate/Product_Data.rds",
   
   
   if(nested == TRUE){
-    rcl_results <- with(pyblp$parallel(pycores),
-                        rcl_problem$solve(sigma = sigma_matrix, 
+    rcl_results <- rcl_problem$solve(sigma = sigma_matrix, 
                                           #  sigma_bounds = tuple(nonlinear_lb, nonlinear_ub),
                                           optimization = optimization_parameter,
                                           check_optimality = optimality,
                                           rho = 0.5,
                                           rho_bounds = c(0.01, 0.99),
                                           shares_bounds = c(1e-200, 0.15),
-                                          se_type = se))
+                                          se_type = se)
   } else {
-    rcl_results <- with(pyblp$parallel(pycores),
-                        rcl_problem$solve(sigma = sigma_matrix, 
-                                          optimization = optimization_parameter,
-                                          check_optimality = "gradient"))
+    rcl_results <- rcl_problem$solve(sigma = sigma_matrix, 
+                      optimization = optimization_parameter,
+                        check_optimality = "gradient")
   }
-  
+  remove(rcl_problem)
   gc(); gc(); 
   py_save_object(object = rcl_results, 
                  filename = output_file)

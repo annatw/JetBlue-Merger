@@ -1,3 +1,12 @@
+five_statistic_row_make <- function(name, vector){
+  new_row <- c(name, round(mean(vector, na.rm = TRUE), digits = 2),
+               paste("(", round(sd(vector, na.rm = TRUE), digits = 2), ")", sep = ),
+               round(min(vector, na.rm = TRUE), digits = 2),
+               round(median(vector,na.rm = TRUE), digits = 2),
+               round(max(vector, na.rm = TRUE), digits = 2))
+  return(new_row)
+}
+
 regions_of_note <- function(output = "06.Tables/regionsOfNote.tex"){
   db1b_data <- readRDS("02.Intermediate/Compile_DB1B.Rds")
   t100_data <- readRDS("02.Intermediate/Compile_T100_Q.Rds")
@@ -1840,3 +1849,89 @@ route_competition_table <- function(input = "02.Intermediate/DB1B_With_Controls.
     save_kable(file = output)
 }
 
+
+summary_product_revised <- function(input = "02.Intermediate/Product_Data.rds",
+                                    output = "06.Tables/SummaryStatistics_Product_Revised.tex"){
+  product_data <- readRDS(input)
+  
+  price_row <- five_statistic_row_make(name = "Price (2017 USD)", product_data$prices * 100)
+  passengers_row <- five_statistic_row_make(name = "Passengers", product_data$Passengers.Product)
+  mktMiles_row <- five_statistic_row_make(name = "Distance (1000s)", product_data$MktMilesFlown)
+  exMiles_row <- five_statistic_row_make(name = "Extra Distance", product_data$Extra_Miles)
+  nonstop_row <- five_statistic_row_make(name = "Nonstop", product_data$NonStop)
+  origin_dest <- five_statistic_row_make(name = "Origin Destinations",
+                                         product_data$Origin_Firm_Destinations)
+  origin_prescence <- five_statistic_row_make(name = "Origin Prescence (\%)",
+                                              product_data$Origin_Firm_Service_Ratio)
+  delta <- five_statistic_row_make(name = "Delta", product_data$Carrier == "Delta Air Lines Inc.")
+  american <- five_statistic_row_make(name = "American", product_data$Carrier == "American Airlines Inc.")
+  united <- five_statistic_row_make(name = "United", product_data$Carrier == "United Air Lines Inc.")
+  southwest <- five_statistic_row_make(name = "Southwest", product_data$Carrier == "Southwest Airlines Co.")
+  jetblue <- five_statistic_row_make(name = "JetBlue", product_data$Carrier == "JetBlue Airways")
+  spirit <- five_statistic_row_make(name = "Spirit", product_data$Carrier == "Spirit Air Lines")
+  minor_carrier <- five_statistic_row_make(name = "Other Carrier", product_data$Carrier == "Minor Carrier")
+  obs_row <- c("Observations", nrow(product_data), "", "", "", "")
+  
+  title_row <- c("", "Mean", "(SD)", "Minimum", "Median", "Maximum")
+  frame <- rbind(price_row, passengers_row,
+                 mktMiles_row, exMiles_row, nonstop_row,
+                 origin_dest, origin_prescence, delta,
+                 american, united, southwest, jetblue,
+                 spirit, minor_carrier, obs_row)
+  
+  kbl(frame,
+      format = "latex", col.names = title_row,
+      row.names = F,
+      escape = FALSE, booktabs = TRUE,
+      linesep = "") %>%
+    save_kable(output)
+}
+
+summary_product_sp_jb_focus <- function(input = "02.Intermediate/Product_Data.rds",
+                                        output = "06.Tables/SummaryStatistics_Product_FocusFirms.tex"){
+  product_data <- readRDS(input)
+  product_data.jb <- product_data[Carrier == "JetBlue Airways",]
+  product_data.sp <- product_data[Carrier == "Spirit Air Lines",]
+  
+  price_row.jb <- five_statistic_row_make(name = "Price (2017 USD)", product_data.jb$prices * 100)
+  passengers_row.jb <- five_statistic_row_make(name = "Passengers", product_data.jb$Passengers.Product)
+  mktMiles_row.jb <- five_statistic_row_make(name = "Distance (1000s)", product_data.jb$MktMilesFlown)
+  exMiles_row.jb <- five_statistic_row_make(name = "Extra Distance", product_data.jb$Extra_Miles)
+  nonstop_row.jb <- five_statistic_row_make(name = "Nonstop", product_data.jb$NonStop)
+  origin_dest.jb <- five_statistic_row_make(name = "Origin Destinations",
+                                         product_data.jb$Origin_Firm_Destinations)
+  origin_prescence.jb <- five_statistic_row_make(name = "Origin Prescence (%)",
+                                              product_data.jb$Origin_Firm_Service_Ratio)
+  obs_row.jb <- c("Observations", nrow(product_data.jb), "", "", "", "")
+  
+  
+  price_row.sp <- five_statistic_row_make(name = "Price (2017 USD)", product_data.sp$prices * 100)
+  passengers_row.sp <- five_statistic_row_make(name = "Passengers", product_data.sp$Passengers.Product)
+  mktMiles_row.sp <- five_statistic_row_make(name = "Distance (1000s)", product_data.sp$MktMilesFlown)
+  exMiles_row.sp <- five_statistic_row_make(name = "Extra Distance", product_data.sp$Extra_Miles)
+  nonstop_row.sp <- five_statistic_row_make(name = "Nonstop", product_data.sp$NonStop)
+  origin_dest.sp <- five_statistic_row_make(name = "Origin Destinations",
+                                            product_data.sp$Origin_Firm_Destinations)
+  origin_prescence.sp <- five_statistic_row_make(name = "Origin Prescence (\\%)",
+                                                 product_data.sp$Origin_Firm_Service_Ratio)
+  obs_row.sp <- c("Observations", nrow(product_data.sp), "", "", "", "")
+  
+  title_row<- c("", "Mean", "(SD)", "Minimum", "Median", "Maximum")
+  title_row.sp <- c("Spirit", "Mean", "(SD)", "Minimum", "Median", "Maximum")
+  
+  frame <- rbind(price_row.jb, passengers_row.jb,
+                 mktMiles_row.jb, exMiles_row.jb, nonstop_row.jb,
+                 origin_dest.jb, origin_prescence.jb, obs_row.jb,
+                 price_row.sp, passengers_row.sp,
+                 mktMiles_row.sp, exMiles_row.sp, nonstop_row.sp,
+                 origin_dest.sp, origin_prescence.sp, obs_row.sp)
+  
+  kbl(frame,
+      format = "latex", col.names = title_row,
+      row.names = F,
+      escape = FALSE, booktabs = TRUE,
+      linesep = "") %>%
+    group_rows(group_label = "JetBlue", start_row = 1, end_row = 8) %>%
+    group_rows(group_label = "Spirit", start_row = 9, end_row = 16) %>% 
+    save_kable(output)
+}
