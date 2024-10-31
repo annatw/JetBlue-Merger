@@ -83,7 +83,7 @@ linear_component_logit <- pyblp$Formulation(linear_formula)
 supply_component <- pyblp$Formulation("1 + MktMilesFlown + NonStop + Destination_Firm_Service_Ratio", absorb = "C(Year_Quarter_Effect) + C(Carrier)", absorb_method = "lsmr")
   
 # nonlinear_component <- pyblp$Formulation("1 + prices + NonStop")
- nonlinear_component <- pyblp$Formulation("0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq")
+ nonlinear_component <- pyblp$Formulation("0 + prices + NonStop")
 
 # Instruments as Follows: First Row: Price
 
@@ -180,6 +180,7 @@ summary_statistics_product_level_slim();
 summary_statistics_market_level()
 summary_statistics_market_level_slim()
 summary_product_sp_jb_focus()
+summary_market.revise()
 product_data_descriptive_plots()
 instrument_comparison_table()
 

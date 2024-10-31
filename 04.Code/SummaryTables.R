@@ -1861,7 +1861,7 @@ summary_product_revised <- function(input = "02.Intermediate/Product_Data.rds",
   nonstop_row <- five_statistic_row_make(name = "Nonstop", product_data$NonStop)
   origin_dest <- five_statistic_row_make(name = "Origin Destinations",
                                          product_data$Origin_Firm_Destinations)
-  origin_prescence <- five_statistic_row_make(name = "Origin Prescence (\%)",
+  origin_prescence <- five_statistic_row_make(name = "Origin Prescence (\\%)",
                                               product_data$Origin_Firm_Service_Ratio)
   delta <- five_statistic_row_make(name = "Delta", product_data$Carrier == "Delta Air Lines Inc.")
   american <- five_statistic_row_make(name = "American", product_data$Carrier == "American Airlines Inc.")
@@ -1932,6 +1932,158 @@ summary_product_sp_jb_focus <- function(input = "02.Intermediate/Product_Data.rd
       escape = FALSE, booktabs = TRUE,
       linesep = "") %>%
     group_rows(group_label = "JetBlue", start_row = 1, end_row = 8) %>%
+    row_spec(row = 7, hline_after = TRUE) %>%
     group_rows(group_label = "Spirit", start_row = 9, end_row = 16) %>% 
+    row_spec(row = 15, hline_after = TRUE) %>%
+    save_kable(output)
+}
+
+summary_market.revise <- function(input = "02.Intermediate/Product_Data.rds",
+                                  output = "06.Tables/SummaryStatistics_Market.tex"){
+  product_data <- readRDS(input)
+  
+  product_data.market <- product_data %>% group_by(Year, Quarter, Origin, Dest) %>%
+    summarize(Tourism = max(Tourism), 
+              Share.NonStop = mean(NonStop),
+              MinMiles = min(MktMilesFlown),
+              Num_Products_In_Market = mean(Num_Products_In_Market),
+              Population.GeomMean = mean(sqrt(Origin.Population * Destination.Population)),
+              Passengers.In.Market = mean(Passengers.Inside.Market),
+              Southwest_Prescence = max(Southwest_Prescence),
+              Delta_Prescence = max(Delta_Prescence),
+              United_Prescence = max(United_Prescence),
+              American_Prescence = max(American_Prescence),
+              JetBlue_Prescence = max(JetBlue_Prescence),
+              Spirit_Prescence = max(Spirit_Prescence))
+  
+  products.row <- five_statistic_row_make("Number of Products",
+                                          product_data.market$Num_Products_In_Market) 
+  nonstop.row <- five_statistic_row_make(name = "Share Nonstop Products", 
+                                         vector = product_data.market$Share.NonStop)
+  potential.row <- five_statistic_row_make("Market Size (Thousands)", 
+                                           vector = product_data.market$Population.GeomMean / 1000)
+  passengers.row <- five_statistic_row_make("Customers in Market", 
+                                            product_data.market$Passengers.In.Market)
+  miles.row <- five_statistic_row_make("Direct Distance", product_data.market$MinMiles)
+  tourism.row <- five_statistic_row_make("Tourist Market",
+                                         product_data.market$Tourism)
+  delta <- five_statistic_row_make("Delta Prescence",
+                                   product_data.market$Delta_Prescence)
+  united <- five_statistic_row_make("United Presence",
+                                    product_data.market$United_Prescence)
+  american <- five_statistic_row_make("American Prescence", 
+                                      product_data.market$American_Prescence)
+  jetblue <- five_statistic_row_make("JetBlue Prescence",
+                                     product_data.market$JetBlue_Prescence)
+  southwest <- five_statistic_row_make("Southwest Prescence",
+                                       product_data.market$Southwest_Prescence)
+  spirit <- five_statistic_row_make("Spirit Prescence",
+                                    product_data.market$Spirit_Prescence)
+  obs <- c("Observations", nrow(product_data.market), "", "", "", "")
+  
+  title_row <- c("", "Mean", "(SD)", "Minimum", "Median", "Maximum")
+  
+  frame <- rbind(products.row, nonstop.row, potential.row, passengers.row, miles.row,
+                 tourism.row, delta, united, american, southwest, jetblue, spirit, obs)
+  kbl(frame,
+      format = "latex", col.names = title_row,
+      row.names = F,
+      escape = FALSE, booktabs = TRUE,
+      linesep = "") %>%
+    row_spec(row = 12, hline_after = T) %>%
+    save_kable(output)
+}
+
+summary_market_focus_firms <-  function(input = "02.Intermediate/Product_Data.rds",
+                                        output = "06.Tables/SummaryStatistics_Market.Focus.tex"){
+  product_data <- readRDS(input)
+  
+  product_data.market <- product_data %>% group_by(Year, Quarter, Origin, Dest) %>%
+    summarize(Tourism = max(Tourism), 
+              Share.NonStop = mean(NonStop),
+              MinMiles = min(MktMilesFlown),
+              Num_Products_In_Market = mean(Num_Products_In_Market),
+              Population.GeomMean = mean(sqrt(Origin.Population * Destination.Population)),
+              Passengers.In.Market = mean(Passengers.Inside.Market),
+              Southwest_Prescence = max(Southwest_Prescence),
+              Delta_Prescence = max(Delta_Prescence),
+              United_Prescence = max(United_Prescence),
+              American_Prescence = max(American_Prescence),
+              JetBlue_Prescence = max(JetBlue_Prescence),
+              Spirit_Prescence = max(Spirit_Prescence)) %>%
+    as.data.table()
+  
+  jb.data <- product_data.market[JetBlue_Prescence == TRUE,]
+  sp.data <- product_data.market[Spirit_Prescence == TRUE,]
+  
+  # JetBlue Rows
+  products.jb <- five_statistic_row_make("Number of Products",
+                                         jb.data$Num_Products_In_Market) 
+  nonstop.jb <- five_statistic_row_make(name = "Share Nonstop Products", 
+                                         vector = jb.data$Share.NonStop)
+  potential.jb <- five_statistic_row_make("Market Size (Thousands)", 
+                                           vector = jb.data$Population.GeomMean / 1000)
+  passengers.jb<- five_statistic_row_make("Customers in Market", 
+                                          jb.data$Passengers.In.Market)
+  miles.jb <- five_statistic_row_make("Direct Distance", jb.data$MinMiles)
+  tourism.jb <- five_statistic_row_make("Tourist Market",
+                                        jb.data$Tourism)
+  delta.jb <- five_statistic_row_make("Delta Prescence",
+                                      jb.data$Delta_Prescence)
+  united.jb <- five_statistic_row_make("United Presence",
+                                       jb.data$United_Prescence)
+  american.jb <- five_statistic_row_make("American Prescence", 
+                                         jb.data$American_Prescence)
+  jetblue.jb <- five_statistic_row_make("JetBlue Prescence",
+                                        jb.data$JetBlue_Prescence)
+  southwest.jb <- five_statistic_row_make("Southwest Prescence",
+                                          jb.data$Southwest_Prescence)
+  spirit.jb <- five_statistic_row_make("Spirit Prescence",
+                                       jb.data$Spirit_Prescence)
+  obs.jb <- c("Observations", nrow(jb.data), "", "", "", "")
+  
+  # Spirit Rows
+  products.sp <- five_statistic_row_make("Number of Products",
+                                         sp.data$Num_Products_In_Market) 
+  nonstop.sp <- five_statistic_row_make(name = "Share Nonstop Products", 
+                                        vector = sp.data$Share.NonStop)
+  potential.sp <- five_statistic_row_make("Market Size (Thousands)", 
+                                          vector = sp.data$Population.GeomMean / 1000)
+  passengers.sp<- five_statistic_row_make("Customers in Market", 
+                                          sp.data$Passengers.In.Market)
+  miles.sp <- five_statistic_row_make("Direct Distance", sp.data$MinMiles)
+  tourism.sp <- five_statistic_row_make("Tourist Market",
+                                        sp.data$Tourism)
+  delta.sp <- five_statistic_row_make("Delta Prescence",
+                                      sp.data$Delta_Prescence)
+  united.sp <- five_statistic_row_make("United Presence",
+                                       sp.data$United_Prescence)
+  american.sp <- five_statistic_row_make("American Prescence", 
+                                         sp.data$American_Prescence)
+  jetblue.sp <- five_statistic_row_make("JetBlue Prescence",
+                                        sp.data$JetBlue_Prescence)
+  southwest.sp <- five_statistic_row_make("Southwest Prescence",
+                                          sp.data$Southwest_Prescence)
+  spirit.sp <- five_statistic_row_make("Spirit Prescence",
+                                       sp.data$Spirit_Prescence)
+  obs.sp <- c("Observations", nrow(sp.data), "", "", "", "")
+  
+  title_row <- c("", "Mean", "(SD)", "Minimum", "Median", "Maximum")
+  
+  frame <- rbind(products.jb, nonstop.jb, potential.jb, passengers.jb, miles.jb,
+                 tourism.jb, delta.jb, united.jb, american.jb, southwest.jb, 
+                 jetblue.jb, spirit.jb, obs.jb,
+                 products.sp, nonstop.sp, potential.sp, passengers.sp, miles.sp,
+                 tourism.sp, delta.sp, united.sp, american.sp, southwest.sp, 
+                 jetblue.sp, spirit.sp, obs.sp)
+  kbl(frame,
+      format = "latex", col.names = title_row,
+      row.names = F,
+      escape = FALSE, booktabs = TRUE,
+      linesep = "") %>%
+    group_rows(group_label = "JetBlue Markets", start_row = 1, end_row = 13) %>%
+    row_spec(row = 12, hline_after = T) %>%
+    group_rows(group_label = "Spirit Markets", start_row = 14, end_row = 26) %>%
+    row_spec(row = 25, hline_after = T) %>%
     save_kable(output)
 }
