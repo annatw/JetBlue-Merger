@@ -1850,7 +1850,7 @@ route_competition_table <- function(input = "02.Intermediate/DB1B_With_Controls.
 }
 
 
-summary_product_revised <- function(input = "02.Intermediate/Product_Data.rds",
+summary_product <- function(input = "02.Intermediate/Product_Data.rds",
                                     output = "06.Tables/SummaryStatistics_Product_Revised.tex"){
   product_data <- readRDS(input)
   
@@ -1938,7 +1938,7 @@ summary_product_sp_jb_focus <- function(input = "02.Intermediate/Product_Data.rd
     save_kable(output)
 }
 
-summary_market.revise <- function(input = "02.Intermediate/Product_Data.rds",
+summary_market <- function(input = "02.Intermediate/Product_Data.rds",
                                   output = "06.Tables/SummaryStatistics_Market.tex"){
   product_data <- readRDS(input)
   

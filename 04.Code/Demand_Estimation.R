@@ -84,9 +84,8 @@ blp_rcl <- function(input_file = "02.Intermediate/Product_Data.rds",
   }
   
   if(is.null(nonlinearstart)){
-    number_non_linear <- str_count(string = as.character(nonlinear), 
-                                   pattern = "\\+") +1
-  nonlinearstart <- diag(x = 1, ncol = 4, nrow = 4)
+    number_non_linear <- 3
+  nonlinearstart <- diag(x = 1, ncol = 3, nrow = 3)
     
   nonlinear_lb <- matrix(rep(0, number_non_linear^2), nrow = number_non_linear);
   nonlinear_ub <- nonlinear_lb
@@ -404,6 +403,47 @@ export_rcl_output_to_latex <- function(rcl_in = "03.Output/nested_rcl_optimal.pi
     save_kable(file = output_table)
 }
 
+sp_jb_elasticity_mean <- function(rcl, rcl_data){
+  # Now, Estimate Spirit, JetBlue Elasticities
+  spirit_markets <-  unique(rcl_data[Carrier == "Spirit Air Lines", market_ids])
+  jb_markets <-  unique(rcl_data[Carrier == "JetBlue Airways", market_ids])
+  
+  spirit_e <- c()
+  jb_e <- c()
+  
+  for(i in 1:length(spirit_markets)){
+    current_matrix <- rcl$compute_elasticities(market_id = spirit_markets[i])
+    mkt_products <- rcl_data[market_ids == spirit_markets[i],]
+    spirit_product <- (1:nrow(mkt_products))[mkt_products$Carrier == "Spirit Air Lines"]
+    
+    for(j in 1:length(spirit_product)){
+      spirit_e <- c(spirit_e, current_matrix[spirit_product[j], spirit_product[j]])
+    } 
+    
+    if(i %% 100 == 0){
+      gc();
+    }
+  }
+  
+  for(i in 1:length(jb_markets)){
+    current_matrix <- rcl$compute_elasticities(market_id = jb_markets[i])
+    mkt_products <- rcl_data[market_ids == jb_markets[i],]
+    jb_product <- (1:nrow(mkt_products))[mkt_products$Carrier == "JetBlue Airways"]
+    
+    for(j in 1:length(jb_product)){
+      jb_e <- c(jb_e, current_matrix[jb_product[j], jb_product[j]])
+    } 
+    
+    if(i %% 100 == 0){
+      gc();
+    }
+  }
+  
+  return(c(round(mean(spirit_e), digits = 2), 
+           round(mean(jb_e), digits = 2)))
+}
+
+
 combined_rcl_output_table <- function(post_in = "03.Output/nested_rcl_optimal.pickle",
                                       post_data_in = "02.Intermediate/Product_Data.rds",
                                       pre_in = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
@@ -413,47 +453,6 @@ combined_rcl_output_table <- function(post_in = "03.Output/nested_rcl_optimal.pi
   product_post <- readRDS(post_data_in)
   rcl_pre <- py_load_object(pre_in)
   product_pre <- readRDS(pre_data_in)
-  
-  sp_jb_elasticity_mean <- function(rcl, rcl_data){
-    # Now, Estimate Spirit, JetBlue Elasticities
-    spirit_markets <-  unique(rcl_data[Carrier == "Spirit Air Lines", market_ids])
-    jb_markets <-  unique(rcl_data[Carrier == "JetBlue Airways", market_ids])
-    
-    spirit_e <- c()
-    jb_e <- c()
-    
-    for(i in 1:length(spirit_markets)){
-      current_matrix <- rcl$compute_elasticities(market_id = spirit_markets[i])
-      mkt_products <- rcl_data[market_ids == spirit_markets[i],]
-      spirit_product <- (1:nrow(mkt_products))[mkt_products$Carrier == "Spirit Air Lines"]
-      
-      for(j in 1:length(spirit_product)){
-        spirit_e <- c(spirit_e, current_matrix[spirit_product[j], spirit_product[j]])
-      } 
-      
-      if(i %% 100 == 0){
-        gc();
-      }
-    }
-    
-    for(i in 1:length(jb_markets)){
-      current_matrix <- rcl$compute_elasticities(market_id = jb_markets[i])
-      mkt_products <- rcl_data[market_ids == jb_markets[i],]
-      jb_product <- (1:nrow(mkt_products))[mkt_products$Carrier == "JetBlue Airways"]
-      
-      for(j in 1:length(jb_product)){
-        jb_e <- c(jb_e, current_matrix[jb_product[j], jb_product[j]])
-      } 
-      
-      if(i %% 100 == 0){
-        gc();
-      }
-    }
-    
-    return(c(round(mean(spirit_e), digits = 2), 
-                        round(mean(jb_e), digits = 2)))
-  }
-  
   
   mean_utility1 <- c("Prices", starmake(rcl_post$beta[1], rcl_post$beta_se[1]),
                      starmake(rcl_pre$beta[1], rcl_pre$beta_se[1]))
@@ -525,4 +524,78 @@ combined_rcl_output_table <- function(post_in = "03.Output/nested_rcl_optimal.pi
     pack_rows(group_label = "Nesting Coefficient", 17, 18) %>%
     pack_rows(group_label = "Summary Statistics", 19, 25) %>%
     save_kable(file = output_table)
+}
+
+two_model_make <- function(model_a, model_b, 
+                            se_a, se_b,
+                               id, label){
+  row1 <- c(label, round(model_a[id], digits = 3), round(model_b[id], digits = 3))
+  row2 <- c("", sd_format(se_a[id]), sd_format(se_b[id]))
+  return(rbind(row1, row2))
+}
+
+logit_two_period_table <- function(model.post.in = "03.Output/nested_logit_iv.pickle",
+                                   product.post.in = "02.Intermediate/Product_Data.rds",
+                                   model.pre.in = "03.Output/pre_pandemic_nested_logit_iv.pickle",
+                                   product.pre.in = "02.Intermediate/prepandemic.rds",
+                                   output = "06.Tables/NestedLogitResults.tex"){
+   model.post <- py_load_object(model.post.in)
+   product.post <- readRDS(product.post.in)
+   model.pre <- py_load_object(model.pre.in)
+   product.pre <- readRDS(product.pre.in)
+  
+  # First Group - Logit Means
+  price <- two_model_make(label = "Price", model_a = model.post$beta,
+                          model_b = model.pre$beta, se_a = model.post$beta_se,
+                          se_b = model.pre$beta_se, id = 1)
+  nonstop <- two_model_make(label = "Nonstop", model_a = model.post$beta,
+                            model_b = model.pre$beta, se_a = model.post$beta_se,
+                            se_b = model.pre$beta_se, id = 2)
+  miles <- two_model_make(label = "Miles Flown", model_a = model.post$beta,
+                          model_b = model.pre$beta, se_a = model.post$beta_se,
+                          se_b = model.pre$beta_se, id = 3)
+  miles_sq <- two_model_make(label = "Miles Flown$^2$", model_a = model.post$beta,
+                          model_b = model.pre$beta, se_a = model.post$beta_se,
+                          se_b = model.pre$beta_se, id = 4)
+  serviceRatio <- two_model_make(label = "Origin Prescence", model_a = model.post$beta,
+                                 model_b = model.pre$beta, se_a = model.post$beta_se,
+                                 se_b = model.pre$beta_se, id = 5)
+  extraMiles <- two_model_make(label = "Origin Prescence", model_a = model.post$beta,
+                               model_b = model.pre$beta, se_a = model.post$beta_se,
+                               se_b = model.pre$beta_se, id = 6)
+  tourist <- two_model_make(label = "Origin Prescence", model_a = model.post$beta,
+                            model_b = model.pre$beta, se_a = model.post$beta_se,
+                            se_b = model.pre$beta_se, id = 7)
+  rho <- two_model_make(label = "Nesting Parameter", model_a = model.post$rho,
+                        model_b = model.pre$rho, se_a = model.post$rho_se,
+                        se_b = model.pre$rho_se,
+                        id = 1)
+  
+  # Descriptive Statistics
+  spirit_jb_elasticity_post <- sp_jb_elasticity_mean(model.post, product.post)
+  spirit_jb_elasticity_pre <- sp_jb_elasticity_mean(model.pre, product.pre)
+  
+  spirit_e <- c("Mean Spirit Elasticity", spirit_jb_elasticity_post[1], spirit_jb_elasticity_pre[1])
+  jetblue_e <- c("Mean JetBlue Elasticity", spirit_jb_elasticity_post[2],
+                 spirit_jb_elasticity_pre[2])
+  elasticity <- c("Mean Elasticity", round(mean(model.post$extract_diagonal_means(model.post$compute_elasticities())), digits = 3), 
+                           round(mean(model.pre$extract_diagonal_means(model.pre$compute_elasticities())), digits = 3))
+  
+  # Summary Rows:
+  obs <- c("Observations", nrow(product.post), nrow(product.pre))
+  n_products <- c("Products", length(unique(product.post$product_ids)),
+                  length(unique(product.pre$product_ids)))
+  n_markets <- c("Markets", length(unique(product.post$market_ids)),
+                 length(unique(product.pre$markets_ids)))
+  period <- c("Period", "2021Q2-2023Q2", "2017Q1-2019Q4")
+  
+  table <- rbind(price, nonstop, miles, miles_sq, serviceRatio, extraMiles,
+                 tourist, rho, spirit_e, jetblue_e, elasticity, 
+                 obs, n_products, n_markets, period)
+  
+  kbl(table, row.names = FALSE, format= "latex",
+      col.names = c("Variable", "Post-Pandemic", "Pre-Pandemic"),
+      booktabs = TRUE, escape = FALSE) %>%
+    row_spec(16, hline_after = TRUE) %>%
+    save_kable(file = output)
 }
