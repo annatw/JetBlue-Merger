@@ -116,8 +116,12 @@ blp_rcl <- function(input_file = "02.Intermediate/Product_Data.rds",
   sigma_matrix <- nonlinearstart
   
   # Set up Integration Routine
-  integrate <- pyblp$Integration('product', size = 7L,
+  # integrate <- pyblp$Integration('halton', size = 10L,
+  #                                specification_options = dict("seed" = 413L))
+  
+  integrate <- pyblp$Integration('product', size = 5L,
                                  specification_options = dict("seed" = 413L))
+  
   
   rcl_problem <- pyblp$Problem(c(linear, nonlinear), product_data, integration = integrate)
   

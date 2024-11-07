@@ -301,10 +301,10 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
 }
 
 
-merger_simulation_basic <- function(rcl_in = "03.Output/random_coeff_nested_logit_fs_results.pickle",
+merger_simulation_basic <- function(model_in = "03.Output/random_coeff_nested_logit_fs_results.pickle",
                                     data_in = "02.Intermediate/Product_Data.rds",
                                     data_out = "02.Intermediate/Basic_Sim_Product_Data.rds"){
-  rcl <- py_load_object(rcl_in)
+  model <- py_load_object(model_in)
   data <- readRDS(data_in)
   
   data[, merger_carrier := Carrier]
@@ -313,14 +313,14 @@ merger_simulation_basic <- function(rcl_in = "03.Output/random_coeff_nested_logi
   data[, merger_ids := firm_ids]
   data[firm_ids == 9, merger_ids := 6] # Spirit -> JB
 
-  new_prices <- rcl$compute_prices(firm_ids = data$merger_ids,
-                                   costs = rcl$compute_costs())
-  new_shares <- rcl$compute_shares(new_prices)
+  new_prices <- model$compute_prices(firm_ids = data$merger_ids,
+                                   costs = model$compute_costs())
+  new_shares <- model$compute_shares(new_prices)
   
   data[, new.price := new_prices]
   data[, new.share := new_shares]
   
-  data[, cost := rcl$compute_costs()]
+  data[, cost := model$compute_costs()]
   data[, price.change := new.price - prices]
   data[, share.change := new.share - shares]
   
@@ -524,32 +524,25 @@ airport_service_ratios_merger <- function(db1b){
   nonstop_plane[is.na(Firm.Destinations), Firm.Destinations := 1]
   nonstop_plane[, Firm.Ratio := Firm.Destinations / Destinations.Available * 100]
   
-  
-  # Service Ratio Vars for "Minor Carrier" are 0
-  # nonstop_plane[Carrier == "Minor Carrier", Origin_Firm_Destinations := 0]
-  # nonstop_plane[Carrier == "Minor Carrier", Origin_Firm_Service_Ratio := 0]
-  # nonstop_plane[Carrier == "Minor Carrier", Destination_Firm_Service_Ratio := 0]
-  # nonstop_plane[Carrier == "Minor Carrier", Destination_Firm_Destinations := 0]
-
-  
   return(ratio_data)
 }
 
 
-merger_simulation_advanced <- function(rcl_in = "03.Output/nested_rcl_optimal.pickle",
+merger_simulation_advanced <- function(model_in = "03.Output/nested_rcl_optimal.pickle",
                                        data_in = "02.Intermediate/Product_Data.rds",
                                        data_out = "03.Output/Adv_Merger_Sim_Data.rds",
                                        linear = pyblp$Formulation('0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Tourism + C(Year_Quarter_Effect) + C(Carrier)'),
-                                       nonlinear = pyblp$Formulation("0 + prices + NonStop")){
-  rcl <- py_load_object(rcl_in)
+                                       nonlinear = pyblp$Formulation("0 + prices + NonStop"),
+                                       mode = "rcl"){
+  model <- py_load_object(model_in)
   data <- readRDS(data_in)
   
   data[, merger_carrier := Carrier]
   data[Carrier == "Spirit Air Lines", merger_carrier := "JetBlue Airways"]
-  data[, unobserved := rcl$xi]
+  data[, unobserved := model$xi]
   
   # Compute Costs
-  data[, cost := rcl$compute_costs()]
+  data[, cost := model$compute_costs()]
   
   data.new <- data %>% group_by(merger_carrier, Origin, Dest, Year, Quarter, Year_Quarter_Effect, NonStop, market_ids) %>%
     summarize(NonStopMiles = min(NonStopMiles), 
@@ -582,15 +575,20 @@ merger_simulation_advanced <- function(rcl_in = "03.Output/nested_rcl_optimal.pi
                       all.x = TRUE);
   
   # Need to remove Spirit Beta Coeff
-  beta_vec <- rcl$beta
-  beta_labels <- rcl$beta_labels
+  beta_vec <- model$beta
+  beta_labels <- model$beta_labels
   beta_vec <- beta_vec[!grepl(pattern = "Spirit", x = beta_labels)]
   
-  components <- c(linear, nonlinear) 
-  simulation <- pyblp$Simulation(product_formulations = c(linear, nonlinear),
+  if(mode == "rcl"){
+    components <- c(linear, nonlinear) 
+  } else {
+    components <- linear
+  }
+  
+  simulation <- pyblp$Simulation(product_formulations = components,
                                  product_data = data.new,
                                  beta = beta_vec,
-                                 sigma = rcl$sigma,
+                                 sigma = model$sigma,
                                  integration = pyblp$Integration('product', size = 7L,
                                        specification_options = dict("seed" = 413L)),
                                  xi = data.new$unobserved)

@@ -80,8 +80,7 @@ pycores <<- 1L
 linear_formula <- '0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Tourism + C(Year_Quarter_Effect) + C(Carrier)'
 linear_component_rcl <- pyblp$Formulation(linear_formula)
 linear_component_logit <- pyblp$Formulation(linear_formula)
-supply_component <- pyblp$Formulation("1 + MktMilesFlown + NonStop + Destination_Firm_Service_Ratio", absorb = "C(Year_Quarter_Effect) + C(Carrier)", absorb_method = "lsmr")
-  
+
 # nonlinear_component <- pyblp$Formulation("1 + prices + NonStop")
  nonlinear_component <- pyblp$Formulation("0 + prices + NonStop + MktMilesFlown")
 
@@ -137,6 +136,10 @@ state_pop_handle()
                 output = "03.Output/Large_Airports.csv")
   add_control_variables(input = "02.Intermediate/Construct_DB1B/DB1B_Condensed.rds",
                         output = "02.Intermediate/DB1B_With_Controls.Rds"); gc();
+    airport_service_ratios(input = "02.Intermediate/Construct_DB1B/DB1B_Clarified.Rds",
+                         output = "02.Intermediate/Merger_Service_Ratios.Rds",
+                         merger = TRUE)
+
 ```
 
 
@@ -243,7 +246,28 @@ export_nested_logit_to_latex(nl_in = "03.Output/pre_pandemic_nested_logit_iv.pic
                              data_in = "02.Intermediate/prepandemic.rds",
                              output_table = "06.Tables/pre_pandemic_nested_logit.tex")
 
+# Export Table for Paper
+logit_two_period_table()
 
+# Merger Simulation
+# Basic - Captures Shared Ownership
+merger_simulation_basic(model_in = "03.Output/nested_logit_iv.pickle", 
+                        data_in = "02.Intermediate/Product_Data.rds",
+                        data_out = "02.Intermediate/Logit_Sim_Data.rds")
+merger_simulation_basic(model_in = "03.Output/pre_pandemic_nested_logit_iv.pickle",
+                        data_in = "02.Intermediate/prepandemic.rds",
+                        data_out = "02.Intermediate/prepandemic_Logit_Sim_Data.rds")
+
+# Advanced - Capture Efficiencies 
+merger_simulation_advanced(model_in = "03.Output/nested_logit_iv.pickle",
+                          data_in = "02.Intermediate/Product_Data.rds",
+                        data_out = "02.Intermediate/Logit_Sim_Adv_Data.rds",
+                        mode = "logit")
+
+merger_simulation_advanced(model_in = "03.Output/pre_pandemic_nested_logit_iv.pickle",
+                        data_in = "02.Intermediate/prepandemic.rds",
+                        data_out = "02.Intermediate/prepandemic_Logit_Sim_Adv_Data.rds",
+                        mode = "logit")
 ```
 
 
@@ -256,6 +280,7 @@ blp_rcl(additional_instruments = c(hub_interactions, exog_interactions,
         nonlinear = nonlinear_component, nested = TRUE,
         output_file = "03.Output/random_coeff_nested_logit_fs_results.pickle",
         precision = 1e-10); 
+
 export_rcl_output_to_latex(rcl_in = "03.Output/03.Output/random_coeff_nested_logit_fs_results.pickle",
                            data_in = "02.Intermediate/Product_Data.rds",
                            output_table = "06.Tables/PostPandemic_RCL_Results.tex")
