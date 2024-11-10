@@ -1,0 +1,30 @@
+
+\begin{tabular}[t]{llllll}
+\toprule
+Variable & OLS Logit & IV Logit & Nest IV Logit & RC Logit & Nest RC Logit\\
+\midrule
+Price & -0.248 & -0.532 & -0.134 & -0.535 & -0.163\\
+ & (0.0017) & (0.27) & (0.17) & (3.9) & (0.46)\\
+Miles Flown & -0.0304 & -0.0121 & -0.0168 & -0.0274 & -0.0219\\
+ & (0.0014) & (0.017) & (0.01) & (0.014) & (0.022)\\
+Miles Flown$^2$ & -0.000716 & -0.000695 & -0.000136 & -0.000347 & 0.000168\\
+ & (3.5e-05) & (4.2e-05) & (8.9e-05) & (0.00035) & (3e-04)\\
+Nonstop & 3.03 & 2.98 & 0.819 & 2.84 & 0.799\\
+ & (0.011) & (0.048) & (0.33) & (0.11) & (0.4)\\
+Origin Ratio & -0.00861 & -0.00714 & 0.00298 & -0.00768 & -0.000576\\
+ & (9e-05) & (0.0014) & (0.0017) & (0.00039) & (0.0013)\\
+$\rho$ &  &  & 0.779 &  & 0.799\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Controls}}\\
+\hspace{1em}Carrier & X & X & X & X & X\\
+\hspace{1em}Time & X & X & X & X & X\\
+\addlinespace[0.3em]
+\multicolumn{6}{l}{\textbf{Elasticity Statistics}}\\
+\hspace{1em}N Markets & 42477 & 42477 & 42477 & 42477 & 42477\\
+\hspace{1em}N Products & 174416 & 174416  & 174416 & 174416 & 174416\\
+\hspace{1em}Mean Elasticity & -0.552 & -1.19 & -1.22 & -1.19 & -1.54\\
+\hspace{1em}Spirit Mean Elasticitiy & -0.341 & -0.734 & -0.811 & -0.739 & -1.13\\
+\hspace{1em}JetBlue Mean Elasticitiy & -0.546 & -1.17 & -1.28 & -1.18 & -1.68\\
+\bottomrule
+\end{tabular}
