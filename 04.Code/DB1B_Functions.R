@@ -304,14 +304,14 @@ airport_service_ratios <- function(input = "02.Intermediate/Construct_DB1B/DB1B_
   
   if(merger == TRUE){
     keep_carriers <- c("American Airlines Inc.", "United Air Lines Inc.",
-                       "Delta Air Lines Inc.",
-                       "JetBlue Airways", # "Alaska Airlines Inc.",
-                       "Southwest Airlines Co.", "Spirit Air Lines")
+                       "Delta Air Lines Inc.", "Alaska Airlines Inc.",
+                       "JetBlue Airways", "Southwest Airlines Co.", 
+                       "Spirit Air Lines")
     
     ratio_data[!Carrier %in% keep_carriers, Carrier := "Minor Carrier"]
-    ratio_data <- ratio_data %>% group_by(Year, Quarter, Origin, Carrier) %>%
+    ratio_data <- ratio_data %>% group_by(Year, Quarter, Carrier, Origin) %>%
       summarize(Firm.Destinations = max(Firm.Destinations),
-                Firm.Ratio = max(Firm.Ratio)) %>% unique %>%
+                Firm.Ratio = max(Firm.Ratio)) %>% unique() %>%
       as.data.table()
   }
   

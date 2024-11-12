@@ -267,7 +267,7 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
     gandhi_instruments <- pyblp$build_differentiation_instruments(
       pyblp$Formulation("NonStop + MktMilesFlown + MktMilesFlown_Sq + Extra_Miles + Origin_Firm_Service_Ratio"),
       product_data,
-      interact = T)
+      interact = FALSE)
   
     gandhi_instruments_R <- as.data.table(py_to_r(gandhi_instruments))
   
@@ -570,7 +570,8 @@ merger_simulation_advanced <- function(model_in = "03.Output/nested_rcl_optimal.
   # Recompute Origin Prescence Variable
   ratio_data <- readRDS("02.Intermediate/Merger_Service_Ratios.Rds")
   
-  colnames(ratio_data) <- c("Year", "Quarter", "Carrier", "Origin", "Origin_Firm_Destinations", "Origin_Firm_Service_Ratio")
+  colnames(ratio_data) <- c("Year", "Quarter", "Carrier", "Origin", 
+            "Origin_Firm_Destinations", "Origin_Firm_Service_Ratio")
   data.new <- merge(data.new, ratio_data, by = c("Year", "Quarter", "Carrier", "Origin"),
                       all.x = TRUE);
   
@@ -605,30 +606,30 @@ merger_simulation_advanced <- function(model_in = "03.Output/nested_rcl_optimal.
   data.new[, Prices.MaxCost.Sim := py_to_r(simulation.max$product_data$prices)]
   
   # Add each markets Consumer Surplus
-  markets <- unique(data.new$market_ids)
-  data.new[, CS.Original := 0]
-  data.new[, CS.MinCost.Sim := 0]
-  data.new[, CS.MeanCost.Sim := 0]
-  data.new[, CS.MaxCost.Sim := 0]
-  
-  for(i in 1:length(markets)){
-    invisible(data.new[market_ids == markets[i], CS.Original := rcl$compute_consumer_surpluses(market_id = markets[i])])
-    invisible(data.new[market_ids == markets[i], CS.MinCost.Sim := py_to_r(simulation.min$compute_consumer_surpluses(market_id = markets[i]))[1,1]])
-    
-    if(invisible(nrow(py_to_r(simulation.min$compute_consumer_surpluses(market_id = markets[i]))) > 1)){
-      print(i);
-      break;
-    } else if(invisible(ncol(py_to_r(simulation.min$compute_consumer_surpluses(market_id = markets[i]))) > 1)){
-      print(i);
-      break;
-    }
-    
-    invisible(data.new[market_ids == markets[i], CS.MeanCost.Sim := py_to_r(simulation.mean$compute_consumer_surpluses(market_id = markets[i]))[1,1]])
-   
-    invisible(data.new[market_ids == markets[i], CS.MaxCost.Sim := py_to_r(simulation.max$compute_consumer_surpluses(market_id = markets[i]))[1,1]])
-    print(paste("Success: ", i))
-  }
-  gc();
+  # markets <- unique(data.new$market_ids)
+  # data.new[, CS.Original := 0]
+  # data.new[, CS.MinCost.Sim := 0]
+  # data.new[, CS.MeanCost.Sim := 0]
+  # data.new[, CS.MaxCost.Sim := 0]
+  # 
+  # for(i in 1:length(markets)){
+  #   invisible(data.new[market_ids == markets[i], CS.Original := model$compute_consumer_surpluses(market_id = markets[i])])
+  #   invisible(data.new[market_ids == markets[i], CS.MinCost.Sim := py_to_r(simulation.min$compute_consumer_surpluses(market_id = markets[i]))[1,1]])
+  #   
+  #   if(invisible(nrow(py_to_r(simulation.min$compute_consumer_surpluses(market_id = markets[i]))) > 1)){
+  #     print(i);
+  #     break;
+  #   } else if(invisible(ncol(py_to_r(simulation.min$compute_consumer_surpluses(market_id = markets[i]))) > 1)){
+  #     print(i);
+  #     break;
+  #   }
+  #   
+  #   invisible(data.new[market_ids == markets[i], CS.MeanCost.Sim := py_to_r(simulation.mean$compute_consumer_surpluses(market_id = markets[i]))[1,1]])
+  #  
+  #   invisible(data.new[market_ids == markets[i], CS.MaxCost.Sim := py_to_r(simulation.max$compute_consumer_surpluses(market_id = markets[i]))[1,1]])
+  #   print(paste("Success: ", i))
+  # }
+  # gc();
   saveRDS(data.new, file = data_out)
 }
 

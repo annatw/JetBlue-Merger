@@ -66,7 +66,7 @@ blp_logit_iv <- function(input_file = "02.Intermediate/Product_Data.rds",
 }
 
 blp_rcl <- function(input_file = "02.Intermediate/Product_Data.rds",
-                    output_file = "03.Output/random_coeff_logit_fs_results.pickle",
+                    output_file = "03.Output/random_coeff_nested_logit_fs_results.pickle",
                     nonlinearstart = NULL, linearstart = NULL,
                     additional_instruments, linear, nonlinear, 
                     nested = FALSE, optimality = "gradient",
@@ -119,8 +119,8 @@ blp_rcl <- function(input_file = "02.Intermediate/Product_Data.rds",
   # integrate <- pyblp$Integration('halton', size = 10L,
   #                                specification_options = dict("seed" = 413L))
   
-  integrate <- pyblp$Integration('product', size = 5L,
-                                 specification_options = dict("seed" = 413L))
+  integrate <- pyblp$Integration('halton', size = 500L,
+                                 specification_options = dict("seed" = 97L))
   
   
   rcl_problem <- pyblp$Problem(c(linear, nonlinear), product_data, integration = integrate)
@@ -564,10 +564,10 @@ logit_two_period_table <- function(model.post.in = "03.Output/nested_logit_iv.pi
   serviceRatio <- two_model_make(label = "Origin Prescence", model_a = model.post$beta,
                                  model_b = model.pre$beta, se_a = model.post$beta_se,
                                  se_b = model.pre$beta_se, id = 5)
-  extraMiles <- two_model_make(label = "Origin Prescence", model_a = model.post$beta,
+  extraMiles <- two_model_make(label = "Extra Miles", model_a = model.post$beta,
                                model_b = model.pre$beta, se_a = model.post$beta_se,
                                se_b = model.pre$beta_se, id = 6)
-  tourist <- two_model_make(label = "Origin Prescence", model_a = model.post$beta,
+  tourist <- two_model_make(label = "Tourist Route", model_a = model.post$beta,
                             model_b = model.pre$beta, se_a = model.post$beta_se,
                             se_b = model.pre$beta_se, id = 7)
   rho <- two_model_make(label = "Nesting Parameter", model_a = model.post$rho,
@@ -590,7 +590,7 @@ logit_two_period_table <- function(model.post.in = "03.Output/nested_logit_iv.pi
   n_products <- c("Products", length(unique(product.post$product_ids)),
                   length(unique(product.pre$product_ids)))
   n_markets <- c("Markets", length(unique(product.post$market_ids)),
-                 length(unique(product.pre$markets_ids)))
+                 length(unique(product.pre$market_ids)))
   period <- c("Period", "2021Q2-2023Q2", "2017Q1-2019Q4")
   
   table <- rbind(price, nonstop, miles, miles_sq, serviceRatio, extraMiles,

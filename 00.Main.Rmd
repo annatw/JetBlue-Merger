@@ -213,16 +213,16 @@ merger_sim_data_generate(years_allowed = 2019,
 rho_instrument <- c("Num_Products_In_Market")
 origin_interactions <- c("Origin_Hub", "MktMiles_OriginHub", "MktMilesSq_OriginHub",
                         "NonStop_OriginHub")
-    destination_interactions <- c("Destination_Hub","MktMiles_DestinationHub", 
-                    "MktMilesSq_DestinationHub", "NonStop_DestinationHub")
+destination_interactions <- c("Destination_Hub","MktMiles_DestinationHub","MktMilesSq_DestinationHub", "NonStop_DestinationHub")
     hub_interactions <- c(origin_interactions, destination_interactions)
     exog_interactions <- c("MktMiles_NonStop","MktMiles_Sq_NonStop","NonStop_Origin_Share","NonStop_ExtraMiles",
-                            "MktMiles_Sq_Interact", "MktMiles_Origin_Share",
-                           "MktMiles_Extra","OriginRatio_Extra")
+      "MktMiles_Sq_Interact", "MktMiles_Origin_Share","MktMiles_Extra","OriginRatio_Extra")
   
   blp_instruments <- "Average_Other_Distance +Average_Other_Distance_Square + Rival_Direct +
   Average_Rival_Origin_Ratio + Average_Rival_Dest_Ratio + "
 
+  gm_instruments <- gasmiles_basic <- c("GasMiles","GasMiles_Origin_Prescence", "GasMiles_NonStop")
+  
   instruments <- c(rho_instrument, destination_interactions, exog_interactions)
 ```
 
@@ -230,21 +230,18 @@ origin_interactions <- c("Origin_Hub", "MktMiles_OriginHub", "MktMilesSq_OriginH
 # Nested Logit
 ```{r}
 # Post-Pandemic
-blp_logit_iv(additional_instruments = c(hub_interactions, exog_interactions,
+blp_logit_iv(additional_instruments = c(hub_interactions, exog_interactions,gm_instruments,
                                         rho_instrument),
              model = pyblp$Formulation('0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Tourism + C(Year_Quarter_Effect) + C(Carrier)'),
              nested = TRUE, output_file = "03.Output/nested_logit_iv.pickle")
-export_nested_logit_to_latex()
 
 # Pre-Pandemic
-blp_logit_iv(additional_instruments = c(hub_interactions, exog_interactions,
+blp_logit_iv(additional_instruments = c(exog_interactions,
+                                        hub_interactions, gm_instruments,
                                         rho_instrument),
              input_file = "02.Intermediate/prepandemic.rds",
              model = linear_component_logit,
              nested = TRUE, output_file = "03.Output/pre_pandemic_nested_logit_iv.pickle")
-export_nested_logit_to_latex(nl_in = "03.Output/pre_pandemic_nested_logit_iv.pickle",
-                             data_in = "02.Intermediate/prepandemic.rds",
-                             output_table = "06.Tables/pre_pandemic_nested_logit.tex")
 
 # Export Table for Paper
 logit_two_period_table()
@@ -268,6 +265,11 @@ merger_simulation_advanced(model_in = "03.Output/pre_pandemic_nested_logit_iv.pi
                         data_in = "02.Intermediate/prepandemic.rds",
                         data_out = "02.Intermediate/prepandemic_Logit_Sim_Adv_Data.rds",
                         mode = "logit")
+
+# Elasticity Comparison Table
+elasticity_compare_table(postPand_input = "03.Output/nested_logit_iv.pickle",
+                         prePand_input = "03.Output/pre_pandemic_nested_logit_iv.pickle",
+                         table_out = "06.Tables/Logit_Elasticity_Compare_Table.tex")
 ```
 
 
@@ -279,7 +281,7 @@ blp_rcl(additional_instruments = c(hub_interactions, exog_interactions,
         linear = linear_component_rcl,
         nonlinear = nonlinear_component, nested = TRUE,
         output_file = "03.Output/random_coeff_nested_logit_fs_results.pickle",
-        precision = 1e-10); 
+        precision = 1e-15); 
 
 export_rcl_output_to_latex(rcl_in = "03.Output/03.Output/random_coeff_nested_logit_fs_results.pickle",
                            data_in = "02.Intermediate/Product_Data.rds",
