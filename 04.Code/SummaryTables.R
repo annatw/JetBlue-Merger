@@ -797,6 +797,52 @@ summary_statistics_product_level_slim <- function(input = "02.Intermediate/Produ
     save_kable(file = output)
 }
 
+summary_statistics_product_two_period <- function(post_pandemic_in = "02.Intermediate/Product_Data.rds",
+                                                  pre_pandemic_in = "02.Intermediate/prepandemic.rds",
+                                                  output = "06.Tables/SummaryStatistics_Product_TwoPeriod.tex"){
+ period_rows <- function(input){
+  product_data <- readRDS(input)
+  
+  price_row <- five_statistic_row_make(name = "Price (2017 USD)", product_data$prices * 100)
+  passengers_row <- five_statistic_row_make(name = "Passengers", product_data$Passengers.Product)
+  mktMiles_row <- five_statistic_row_make(name = "Distance (1000s)", product_data$MktMilesFlown)
+  exMiles_row <- five_statistic_row_make(name = "Extra Distance", product_data$Extra_Miles)
+  nonstop_row <- five_statistic_row_make(name = "Nonstop", product_data$NonStop)
+  origin_dest <- five_statistic_row_make(name = "Origin Destinations",
+                                         product_data$Origin_Firm_Destinations)
+  origin_prescence <- five_statistic_row_make(name = "Origin Prescence (\\%)",
+                                              product_data$Origin_Firm_Service_Ratio)
+  delta <- five_statistic_row_make(name = "Delta", product_data$Carrier == "Delta Air Lines Inc.")
+  american <- five_statistic_row_make(name = "American", product_data$Carrier == "American Airlines Inc.")
+  united <- five_statistic_row_make(name = "United", product_data$Carrier == "United Air Lines Inc.")
+  southwest <- five_statistic_row_make(name = "Southwest", product_data$Carrier == "Southwest Airlines Co.")
+  jetblue <- five_statistic_row_make(name = "JetBlue", product_data$Carrier == "JetBlue Airways")
+  spirit <- five_statistic_row_make(name = "Spirit", product_data$Carrier == "Spirit Air Lines")
+  minor_carrier <- five_statistic_row_make(name = "Other Carrier", product_data$Carrier == "Minor Carrier")
+  obs_row <- c("Observations", nrow(product_data), "", "", "", "")
+  
+  return(rbind(price_row, passengers_row,
+                 mktMiles_row, exMiles_row, nonstop_row,
+                 origin_dest, origin_prescence, delta,
+                 american, united, southwest, jetblue,
+                 spirit, minor_carrier, obs_row))
+ }
+ 
+ title_row <- c("", "Mean", "(SD)", "Minimum", "Median", "Maximum")
+ post_pandemic <- period_rows(post_pandemic_in)
+ pre_pandemic <- period_rows(pre_pandemic_in)
+  
+ output_table <- rbind(pre_pandemic, post_pandemic)
+ rownames(output_table) <- NULL
+ 
+ kbl(output_table,
+     format = "latex", col.names = title_row,
+     escape = TRUE, booktabs = TRUE) %>%
+   pack_rows(group_label = "Pre-Pandemic", 1, 15) %>%
+   pack_rows(group_label = "Post-Pandemic", 16, 30) %>%
+   save_kable(file = output)
+}
+
 summary_statistics_market_level <- function(input = "02.Intermediate/Product_Data.rds",
                                             output = "06.Tables/SummaryStatistics_Market.tex"){
   data <- read_rds(input)

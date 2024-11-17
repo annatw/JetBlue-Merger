@@ -183,6 +183,12 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
   product_data[, NonStop_ExtraMiles := Extra_Miles * NonStop]
   product_data[, MktMiles_Sq_Interact := MktMilesFlown * MktMilesFlown_Sq]
   
+  # Add Variable which is 1 if either side is a hub
+  product_data[, Hub_Endpoint := Origin_Hub | Destination_Hub]
+  product_data[, Hub_End_MktMiles := Hub_Endpoint * MktMilesFlown]
+  product_data[, Hub_End_MktMiles_Sq := Hub_Endpoint * MktMilesFlown * MktMilesFlown]
+  product_data[, Hub_End_NonStop := Hub_Endpoint * NonStop]
+
   # Variable for Year-Quarter Fixed Effects
   product_data[, Year_Quarter_Effect := paste(Year, " X ", Quarter)]
   
@@ -227,6 +233,7 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
   product_data[, GasMiles_Hub := GasMiles * Destination_Hub]
   product_data[, GasMiles_OriginHub := GasMiles * Origin_Hub]
   product_data[, GasMiles_NonStop := GasMiles * NonStop]
+  product_data[, GasMiles_AllHub := GasMiles * Hub_Endpoint]
 
   # Gas Price Carrier Interactions
   product_data[, GasMiles_Delta := (Carrier == "Delta Air Lines Inc.") * GasMiles]
@@ -235,7 +242,9 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
   product_data[, GasMiles_JetBlue := (Carrier == "JetBlue Airways") * GasMiles]
   product_data[, GasMiles_American:= (Carrier == "American Airlines Inc.") * GasMiles]
   product_data[, GasMiles_Spirit := (Carrier == "Spirit Air Lines") * GasMiles]
-  
+  product_data[, GasMiles_LCC := (!Carrier %in% c("Delta Air Lines Inc.",
+                                                  "United Air Lines Inc.",
+                                                  "American Airlines Inc."))]
   
   
   # Hausman, Per Mile Instruments
@@ -267,7 +276,7 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
     gandhi_instruments <- pyblp$build_differentiation_instruments(
       pyblp$Formulation("NonStop + MktMilesFlown + MktMilesFlown_Sq + Extra_Miles + Origin_Firm_Service_Ratio"),
       product_data,
-      interact = FALSE)
+      interact = F)
   
     gandhi_instruments_R <- as.data.table(py_to_r(gandhi_instruments))
   

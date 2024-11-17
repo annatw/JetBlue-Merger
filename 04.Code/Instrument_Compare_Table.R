@@ -223,10 +223,12 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
                       Origin_Firm_Service_Ratio + Extra_Miles + Extra_Miles_Sq + Tourism + Carrier + Time"
   rho_instrument <- "Num_Products_In_Market + "
   
-  gasmiles <- "GasMiles + GasMiles:Extra_Miles + GasMiles:Origin_Firm_Service_Ratio +"
+  gasmiles <- "GasMiles + GasMiles_Sq + GasMiles_ExtraMiles + GasMiles_NonStop + 
+  GasMiles_Origin_Prescence + GasMiles:Extra_Miles_Sq + "
  
-  exog_interactions <- "MktMiles_NonStop + MktMiles_Sq_NonStop + NonStop_Origin_Share +
-  NonStop_ExtraMiles + MktMiles_Sq_Interact + MktMiles_Origin_Share + MktMiles_Extra +
+  exog_interactions <- "MktMiles_NonStop + MktMiles_Sq_NonStop + MktMiles_Origin_Share + 
+  MktMiles_Extra + MktMilesFlown:Extra_Miles_Sq + MktMiles_Sq_Origin_Share + MktMiles_Sq_NonStop + 
+  MktMiles_Sq_Extra + NonStop_Origin_Share + NonStop_ExtraMiles +
   OriginRatio_Extra +"
  
   origin_interactions <- "Origin_Hub + MktMiles_OriginHub +
@@ -234,6 +236,9 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   
   dest_interactions <- "Destination_Hub + MktMiles_DestinationHub +
                     MktMilesSq_DestinationHub + NonStop:Destination_Hub + "
+  
+  hub_interactions <- "Hub_Endpoint + Hub_Endpoint:MktMilesFlown + Hub_Endpoint:MktMiles_Sq_NonStop +
+  Hub_Endpoint:Origin_Firm_Service_Ratio + Hub_Endpoint:Extra_Miles + "
   
   # Make Gandhi Instrument Vector
   gandhi_instrument <- ""
@@ -303,7 +308,7 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   iv_regression8.summary
   
   # Regression 9: Origin, Dest, Gandhi, Exog
-  iv_regression9 <- ivreg(paste(lhs, "|", origin_interactions,
+  iv_regression9 <- ivreg(paste(lhs, "|", gasmiles, origin_interactions,
                                 dest_interactions,
                                 exog_interactions,
                                 gandhi_instrument,
@@ -465,9 +470,11 @@ prepan_instrument_comparison_table <- function(input_file = "02.Intermediate/Pro
   hub_interactions <- "Destination_Hub + MktMiles_DestinationHub + 
                     MktMilesSq_DestinationHub + NonStop:Destination_Hub + "
   
-  # Make Gandhi Instrument Vector
-  gandhi_instrument <- ""
-  for(i in 0:44){
+  gandhi_instrument <- c()
+  max_gandhi <- max(as.numeric(substr(colnames(product_data)[grepl(pattern = "demand_instruments", 
+                                                                   x = colnames(product_data))],
+                                      start = 19, stop = 20)))
+  for(i in 0:max_gandhi){
     gandhi_instrument <- paste(gandhi_instrument, paste("demand_instruments", i, sep = ""), sep = " + ")
   }
   gandhi_instrument <- paste(gandhi_instrument, "+")

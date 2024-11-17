@@ -447,89 +447,6 @@ sp_jb_elasticity_mean <- function(rcl, rcl_data){
            round(mean(jb_e), digits = 2)))
 }
 
-
-combined_rcl_output_table <- function(post_in = "03.Output/nested_rcl_optimal.pickle",
-                                      post_data_in = "02.Intermediate/Product_Data.rds",
-                                      pre_in = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
-                                      pre_data_in = "02.Intermediate/prepandemic.rds",
-                                      output_table = "06.Tables/RCL_Both_Period_Output.tex"){
-  rcl_post <- py_load_object(post_in)
-  product_post <- readRDS(post_data_in)
-  rcl_pre <- py_load_object(pre_in)
-  product_pre <- readRDS(pre_data_in)
-  
-  mean_utility1 <- c("Prices", starmake(rcl_post$beta[1], rcl_post$beta_se[1]),
-                     starmake(rcl_pre$beta[1], rcl_pre$beta_se[1]))
-  mean_utility1.sd <- c("", sd_format(rcl_post$beta_se[1]), sd_format(rcl_pre$beta_se[1]))
-  mean_utility2 <- c("Nonstop", starmake(rcl_post$beta[2], rcl_post$beta_se[2]),
-                     starmake(rcl_pre$beta[2], rcl_pre$beta_se[2]))
-  mean_utility2.sd <- c("", sd_format(rcl_post$beta_se[2]), sd_format(rcl_pre$beta_se[2]))
-  mean_utility3 <- c("Miles Flown", starmake(rcl_post$beta[3], rcl_post$beta_se[3]),
-                     starmake(rcl_pre$beta[3], rcl_pre$beta_se[3]))
-  mean_utility3.sd <- c("", sd_format(rcl_post$beta_se[3]), sd_format(rcl_pre$beta_se[3]))  
-  mean_utility4 <- c("Miles Flown$^2$", starmake(rcl_post$beta[4], rcl_post$beta_se[4]),
-                     starmake(rcl_pre$beta[4], rcl_pre$beta_se[4]))
-  mean_utility4.sd <- c("", sd_format(rcl_post$beta_se[4]), sd_format(rcl_pre$beta_se[4]))
-  mean_utility5 <- c("Origin Ratio", starmake(rcl_post$beta[5], rcl_post$beta_se[5]),
-                     starmake(rcl_pre$beta[5], rcl_pre$beta_se[5]))
-  mean_utility5.sd <- c("", sd_format(rcl_post$beta_se[5]), sd_format(rcl_pre$beta_se[5]))
-  mean_utility6 <- c("Extra Miles", starmake(rcl_post$beta[6], rcl_post$beta_se[6]),
-                     starmake(rcl_pre$beta[6], rcl_pre$beta_se[6]))
-  mean_utility6.sd <- c("", sd_format(rcl_post$beta_se[6]), sd_format(rcl_pre$beta_se[6]))
-  mean_utility7 <- c("Tourism", starmake(rcl_post$beta[7], rcl_post$beta_se[7]),
-                     starmake(rcl_pre$beta[7], rcl_pre$beta_se[7]))
-  mean_utility7.sd <- c("", sd_format(rcl_post$beta_se[7]), sd_format(rcl_pre$beta_se[7]))
-  
-  nonlinear_1 <- c("Price", starmake(rcl_post$sigma[1,1], rcl_post$sigma_se[1,1]),
-                   starmake(rcl_pre$sigma[1,1], rcl_pre$sigma_se[1,1]))
-  nonlinear_1.sd <- c("", sd_format(rcl_post$sigma_se[1,1]), sd_format(rcl_pre$sigma_se[1,1]))
-
-  nonlinear_2 <- c("Nonstop", starmake(rcl_post$sigma[2,2], rcl_post$sigma_se[2,2]),
-                   starmake(rcl_pre$sigma[2,2], rcl_pre$sigma_se[2,2]))
-  nonlinear_2.sd <- c("", sd_format(rcl_post$sigma_se[2,2]), sd_format(rcl_pre$sigma_se[2,2]))
-  
-  nesting_1 <- c("Nesting Coefficient", starmake(rcl_post$rho, rcl_post$rho_se),
-                 starmake(rcl_post$rho, rcl_post$rho_se))
-  nesting_1.sd <- c("", sd_format(rcl_post$rho), sd_format(rcl_pre$rho))
-  
-  spirit_jb_elasticity_post <- sp_jb_elasticity_mean(rcl_post, product_post)
-  spirit_jb_elasticity_pre <- sp_jb_elasticity_mean(rcl_pre, product_pre)
-  
-  summary_statistics1 <- c("Period", "2017Q1-2019Q4", "2021Q2:2023Q2")
-  summary_statistics2 <- c("N Products", nrow(product_post), nrow(product_pre))
-  summary_statistics3 <- c("N Markets", length(unique(product_post$market_ids)),
-                          length(unique(product_pre$market_ids)))
-  summary_statistics4 <- c("Mean Elasticity", round(mean(rcl_post$extract_diagonal_means(rcl_post$compute_elasticities())), digits = 3), 
-                           round(mean(rcl_pre$extract_diagonal_means(rcl_pre$compute_elasticities())), digits = 3))
-  summary_statistics5 <- c("Spirit Mean Elasticity", spirit_jb_elasticity_post[1], spirit_jb_elasticity_pre[1])
-  summary_statistics6 <- c("JetBlue Mean Elasticity", spirit_jb_elasticity_post[2], spirit_jb_elasticity_pre[2])
-  summary_statistics7 <- c("Mean Markup", round(mean(rcl_post$compute_markups(costs = rcl_post$compute_costs())), digits = 3),
-                     round(mean(rcl_pre$compute_markups(costs = rcl_pre$compute_costs())), digits = 3))
-  
-  table_out <- rbind(mean_utility1, mean_utility1.sd, mean_utility2, mean_utility2.sd,
-                     mean_utility3, mean_utility3.sd, mean_utility4, mean_utility4.sd,
-                     mean_utility6, mean_utility6.sd, mean_utility7, mean_utility7.sd,
-                     nonlinear_1, nonlinear_1.sd, nonlinear_2, nonlinear_2.sd,
-                     nesting_1, nesting_1.sd, summary_statistics1, summary_statistics2,
-                     summary_statistics3, summary_statistics4, summary_statistics5,
-                     summary_statistics6, summary_statistics7)
-  
-  rownames(table_out) <- NULL
-  colnames(table_out) <- c("Variable", "Post-Pandemic", "Pre-Pandemic")
-  table_out <- as.data.frame(table_out)
-  
-  
-  kbl(table_out,
-      format = "latex", 
-      escape = FALSE, booktabs = TRUE)  %>%
-    row_spec(row = 26, hline_after = TRUE) %>%
-    pack_rows(group_label = "Linear Coefficients", 1,12) %>%
-    pack_rows(group_label = "Nonlinear Standard Deviations", 13, 16) %>%
-    pack_rows(group_label = "Nesting Coefficient", 17, 18) %>%
-    pack_rows(group_label = "Summary Statistics", 19, 25) %>%
-    save_kable(file = output_table)
-}
-
 two_model_make <- function(model_a, model_b, 
                             se_a, se_b,
                                id, label){
@@ -602,4 +519,86 @@ logit_two_period_table <- function(model.post.in = "03.Output/nested_logit_iv.pi
       booktabs = TRUE, escape = FALSE) %>%
     row_spec(16, hline_after = TRUE) %>%
     save_kable(file = output)
+}
+
+rcl_two_period_table <- function(post_in = "03.Output/random_coeff_nested_logit_fs_results.pickle",
+                                 post_data_in = "02.Intermediate/Product_Data.rds",
+                                 pre_in = "03.Output/prepandemic_random_coeff_nested_logit.pickle",
+                                 pre_data_in = "02.Intermediate/prepandemic.rds",
+                                 output_table = "06.Tables/RCL_Both_Period_Output.tex"){
+  rcl_post <- py_load_object(post_in)
+  product_post <- readRDS(post_data_in)
+  rcl_pre <- py_load_object(pre_in)
+  product_pre <- readRDS(pre_data_in)
+  
+  mean_utility1 <- c("Prices", starmake(rcl_post$beta[1], rcl_post$beta_se[1]),
+                     starmake(rcl_pre$beta[1], rcl_pre$beta_se[1]))
+  mean_utility1.sd <- c("", sd_format(rcl_post$beta_se[1]), sd_format(rcl_pre$beta_se[1]))
+  mean_utility2 <- c("Nonstop", starmake(rcl_post$beta[2], rcl_post$beta_se[2]),
+                     starmake(rcl_pre$beta[2], rcl_pre$beta_se[2]))
+  mean_utility2.sd <- c("", sd_format(rcl_post$beta_se[2]), sd_format(rcl_pre$beta_se[2]))
+  mean_utility3 <- c("Miles Flown", starmake(rcl_post$beta[3], rcl_post$beta_se[3]),
+                     starmake(rcl_pre$beta[3], rcl_pre$beta_se[3]))
+  mean_utility3.sd <- c("", sd_format(rcl_post$beta_se[3]), sd_format(rcl_pre$beta_se[3]))  
+  mean_utility4 <- c("Miles Flown$^2$", starmake(rcl_post$beta[4], rcl_post$beta_se[4]),
+                     starmake(rcl_pre$beta[4], rcl_pre$beta_se[4]))
+  mean_utility4.sd <- c("", sd_format(rcl_post$beta_se[4]), sd_format(rcl_pre$beta_se[4]))
+  mean_utility5 <- c("Origin Ratio", starmake(rcl_post$beta[5], rcl_post$beta_se[5]),
+                     starmake(rcl_pre$beta[5], rcl_pre$beta_se[5]))
+  mean_utility5.sd <- c("", sd_format(rcl_post$beta_se[5]), sd_format(rcl_pre$beta_se[5]))
+  mean_utility6 <- c("Extra Miles", starmake(rcl_post$beta[6], rcl_post$beta_se[6]),
+                     starmake(rcl_pre$beta[6], rcl_pre$beta_se[6]))
+  mean_utility6.sd <- c("", sd_format(rcl_post$beta_se[6]), sd_format(rcl_pre$beta_se[6]))
+  mean_utility7 <- c("Tourism", starmake(rcl_post$beta[7], rcl_post$beta_se[7]),
+                     starmake(rcl_pre$beta[7], rcl_pre$beta_se[7]))
+  mean_utility7.sd <- c("", sd_format(rcl_post$beta_se[7]), sd_format(rcl_pre$beta_se[7]))
+  
+  nonlinear_1 <- c("Price", starmake(rcl_post$sigma[1,1], rcl_post$sigma_se[1,1]),
+                   starmake(rcl_pre$sigma[1,1], rcl_pre$sigma_se[1,1]))
+  nonlinear_1.sd <- c("", sd_format(rcl_post$sigma_se[1,1]), sd_format(rcl_pre$sigma_se[1,1]))
+  
+  nonlinear_2 <- c("Nonstop", starmake(rcl_post$sigma[2,2], rcl_post$sigma_se[2,2]),
+                   starmake(rcl_pre$sigma[2,2], rcl_pre$sigma_se[2,2]))
+  nonlinear_2.sd <- c("", sd_format(rcl_post$sigma_se[2,2]), sd_format(rcl_pre$sigma_se[2,2]))
+  
+  nesting_1 <- c("Nesting Coefficient", starmake(rcl_post$rho, rcl_post$rho_se),
+                 starmake(rcl_post$rho, rcl_post$rho_se))
+  nesting_1.sd <- c("", sd_format(rcl_post$rho), sd_format(rcl_pre$rho))
+  
+  spirit_jb_elasticity_post <- sp_jb_elasticity_mean(rcl_post, product_post)
+  spirit_jb_elasticity_pre <- sp_jb_elasticity_mean(rcl_pre, product_pre)
+  
+  summary_statistics1 <- c("Period", "2017Q1-2019Q4", "2021Q2:2023Q2")
+  summary_statistics2 <- c("N Products", nrow(product_post), nrow(product_pre))
+  summary_statistics3 <- c("N Markets", length(unique(product_post$market_ids)),
+                           length(unique(product_pre$market_ids)))
+  summary_statistics4 <- c("Mean Elasticity", round(mean(rcl_post$extract_diagonal_means(rcl_post$compute_elasticities())), digits = 3), 
+                           round(mean(rcl_pre$extract_diagonal_means(rcl_pre$compute_elasticities())), digits = 3))
+  summary_statistics5 <- c("Spirit Mean Elasticity", spirit_jb_elasticity_post[1], spirit_jb_elasticity_pre[1])
+  summary_statistics6 <- c("JetBlue Mean Elasticity", spirit_jb_elasticity_post[2], spirit_jb_elasticity_pre[2])
+  summary_statistics7 <- c("Mean Markup", round(mean(rcl_post$compute_markups(costs = rcl_post$compute_costs())), digits = 3),
+                           round(mean(rcl_pre$compute_markups(costs = rcl_pre$compute_costs())), digits = 3))
+  
+  table_out <- rbind(mean_utility1, mean_utility1.sd, mean_utility2, mean_utility2.sd,
+                     mean_utility3, mean_utility3.sd, mean_utility4, mean_utility4.sd,
+                     mean_utility6, mean_utility6.sd, mean_utility7, mean_utility7.sd,
+                     nonlinear_1, nonlinear_1.sd, nonlinear_2, nonlinear_2.sd,
+                     nesting_1, nesting_1.sd, summary_statistics1, summary_statistics2,
+                     summary_statistics3, summary_statistics4, summary_statistics5,
+                     summary_statistics6, summary_statistics7)
+  
+  rownames(table_out) <- NULL
+  colnames(table_out) <- c("Variable", "Post-Pandemic", "Pre-Pandemic")
+  table_out <- as.data.frame(table_out)
+  
+  
+  kbl(table_out,
+      format = "latex", 
+      escape = FALSE, booktabs = TRUE)  %>%
+    row_spec(row = 26, hline_after = TRUE) %>%
+    pack_rows(group_label = "Linear Coefficients", 1,12) %>%
+    pack_rows(group_label = "Nonlinear Standard Deviations", 13, 16) %>%
+    pack_rows(group_label = "Nesting Coefficient", 17, 18) %>%
+    pack_rows(group_label = "Summary Statistics", 19, 25) %>%
+    save_kable(file = output_table)
 }

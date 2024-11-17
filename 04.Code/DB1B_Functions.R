@@ -204,8 +204,10 @@ condense_db1b <- function(input, output, fares_min = 15, fares_max = 2000){
   orig_count <- nrow(DB1B)
   
   print(paste("Low Fares:", nrow(DB1B[MktFare < fares_min,]) / orig_count * 100, " Of Sample"))
+  print(paste("High Fares:", nrow(DB1B[MktFare > fares_max,]) / orig_count * 100, " Of Sample"))
   
   DB1B[MktFare < fares_min, MktFare := NA] 
+  DB1B[MktFare > fares_max, MktFare := NA]
   
   # Remove All Tickets in Top/Bottom 1 Percent of Fare, Yield For a Quarter
   DB1B[, Yield := MktFare / MktMilesFlown]
@@ -223,13 +225,6 @@ condense_db1b <- function(input, output, fares_min = 15, fares_max = 2000){
   print(paste("High Legs:", nrow(DB1B[MktCoupons >= 4,]) / orig_count * 100, " Of Sample"))
   DB1B[MktCoupons >= 4, MktFare := NA]
   
-  # Remove Extreme Yields
-  DB1B[, Yield := MktFare / MktMilesFlown]
-  DB1B[, Yield_LowerBound := quantile(Yield, .01, na.rm = TRUE), by = c("Year", "Quarter")]
-  DB1B[, Yield_UpperBound := quantile(Yield, .99, na.rm = TRUE), by = c("Year", "Quarter")]
-  
-  DB1B[Yield < Yield_LowerBound, MktFare := NA]
-  DB1B[Yield > Yield_UpperBound, MktFare := NA]
   
   DB1B$NonStop <- DB1B$MktCoupons == 1
   
@@ -244,8 +239,8 @@ condense_db1b <- function(input, output, fares_min = 15, fares_max = 2000){
   DB1B[Passengers.Product < 100, MktFare := NA]
   print(paste("Small Products:", nrow(DB1B[Passengers.Product < 100,]) / nrow(DB1B) * 100, " Of Sample"))
   
-  # DB1B[Passengers.Inside.Market < 500, MktFare := NA]
-  # print(paste("Small Markets:", length(unique(DB1B[Passengers.Inside.Market < 500,]$market_group)) / length(unique(DB1B$market_group)) * 100, " Of Sample"))
+  DB1B[Passengers.Inside.Market < 500, MktFare := NA]
+ # print(paste("Small Markets:", length(unique(DB1B[Passengers.Inside.Market < 500,]$market_group)) / length(unique(DB1B$market_group)) * 100, " Of Sample"))
   
   DB1B[is.na(MktFare), Passengers := NA]
   DB1B[, Avg.Fare := sum(MktFare * Passengers, na.rm= TRUE) / sum(Passengers, na.rm = TRUE),
@@ -305,8 +300,9 @@ airport_service_ratios <- function(input = "02.Intermediate/Construct_DB1B/DB1B_
   if(merger == TRUE){
     keep_carriers <- c("American Airlines Inc.", "United Air Lines Inc.",
                        "Delta Air Lines Inc.", "Alaska Airlines Inc.",
-                       "JetBlue Airways", "Southwest Airlines Co.", 
-                       "Spirit Air Lines")
+                       "JetBlue Airways", "Allegiant Air",
+                       "Southwest Airlines Co.",
+                       "Frontier Airlines Inc.", "Spirit Air Lines")
     
     ratio_data[!Carrier %in% keep_carriers, Carrier := "Minor Carrier"]
     ratio_data <- ratio_data %>% group_by(Year, Quarter, Carrier, Origin) %>%
@@ -623,9 +619,10 @@ add_control_variables <- function(input = "02.Intermediate/Construct_DB1B/DB1B_C
   
   # Adjust to Compile Minor Carriers:
   keep_carriers <- c("American Airlines Inc.", "United Air Lines Inc.",
-                     "Delta Air Lines Inc.",
-                     "JetBlue Airways", # "Alaska Airlines Inc.",
-                     "Southwest Airlines Co.", "Spirit Air Lines")
+                     "Delta Air Lines Inc.", "Alaska Airlines Inc.",
+                     "JetBlue Airways", "Allegiant Air",
+                     "Southwest Airlines Co.",
+                     "Frontier Airlines Inc.", "Spirit Air Lines")
 
   plane_data[!Carrier %in% keep_carriers, Carrier := "Minor Carrier"]
   plane_data[Carrier == "Minor Carrier", Origin.Airport.Type := "Regular"]
