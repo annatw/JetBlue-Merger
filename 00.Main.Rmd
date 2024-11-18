@@ -228,13 +228,13 @@ destination_interactions <- c("Destination_Hub","MktMiles_DestinationHub","MktMi
 # Nested Logit
 ```{r}
 # Post-Pandemic
-blp_logit_iv(additional_instruments = c(hub_interactions, exog_interactions, gm_instruments,
+blp_logit_iv(additional_instruments = c(hub_interactions, exog_interactions,
                                         rho_instrument),
              model = linear_component_logit,
              nested = TRUE, output_file = "03.Output/nested_logit_iv.pickle")
 
 # Pre-Pandemic
-blp_logit_iv(additional_instruments = c(hub_interactions, exog_interactions, gm_instruments,
+blp_logit_iv(additional_instruments = c(hub_interactions, exog_interactions,
                                         rho_instrument),
              input_file = "02.Intermediate/prepandemic.rds",
              model = linear_component_logit,

@@ -336,8 +336,8 @@ add_control_variables <- function(input = "02.Intermediate/Construct_DB1B/DB1B_C
   
   plane_data <- rbind(plane_data.match, plane_data.no_match, fill = TRUE)
   
-  plane_data[is.na(Jet_Fuel_Price), Jet_Fuel_Price := National_Average_JF_Price]
-  # plane_data[, Jet_Fuel_Price := National_Average_JF_Price]
+ # plane_data[is.na(Jet_Fuel_Price), Jet_Fuel_Price := National_Average_JF_Price]
+   plane_data[, Jet_Fuel_Price := National_Average_JF_Price]
   
   # Now, add in the demographic control data
   plane_data[, MatchYear := Year]

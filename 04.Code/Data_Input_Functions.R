@@ -466,10 +466,21 @@ load_jet_fuel <- function(input = "01.Input/13.Oil_Spot_Data/Jet_Fuel_Spot.csv",
   oil$Quarter <- factor(oil$Month, levels = c(1:12),
                         labels = c(rep(1, 3), rep(2, 3),
                                    rep(3, 3), rep(4, 3)))
-  
   oil <- oil  %>%
     group_by(Year, Quarter) %>% summarize(Jet_Fuel_Price = mean(Jet_Fuel_Price)) %>%
     as.data.table() 
+  
+  # Put into Real Dollars
+  price_index <- readRDS("02.Intermediate/price_index.rds")
+  price_index[, Year := as.numeric(Year)]
+  price_index[, Quarter := as.numeric(Quarter)]
+  oil[, Year := as.numeric(Year)]
+  oil[, Quarter := as.numeric(Quarter)]
+  
+  oil <- merge(oil, price_index, by = c("Year", "Quarter"), all.x = TRUE)
+  oil[, Jet_Fuel_Price := Jet_Fuel_Price / (price_index / 100)]
+  oil <- oil[, .(Year, Quarter, Jet_Fuel_Price)]
+  
   saveRDS(oil, output)
 }
 

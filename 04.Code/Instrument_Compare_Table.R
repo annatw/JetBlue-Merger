@@ -237,8 +237,7 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   dest_interactions <- "Destination_Hub + MktMiles_DestinationHub +
                     MktMilesSq_DestinationHub + NonStop:Destination_Hub + "
   
-  hub_interactions <- "Hub_Endpoint + Hub_Endpoint:MktMilesFlown + Hub_Endpoint:MktMiles_Sq_NonStop +
-  Hub_Endpoint:Origin_Firm_Service_Ratio + Hub_Endpoint:Extra_Miles + "
+  hub_interactions <- "Hub_Endpoint + Hub_End_MktMiles + Hub_End_MktMiles_Sq +" 
   
   # Make Gandhi Instrument Vector
   gandhi_instrument <- ""
@@ -262,19 +261,19 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   iv_regression2.summary
   
   # Regression 3: Instrument with Origin Interactions
-  iv_regression3 <- ivreg(paste(lhs, "|", origin_interactions, rho_instrument, back, sep = " "), 
+  iv_regression3 <- ivreg(paste(lhs, "|", hub_interactions, rho_instrument, back, sep = " "), 
                           data = product_data)
   iv_regression3.summary <- summary(iv_regression3)
   iv_regression3.summary
   
   # Regression 4: Instrument with Destination Interactions
-  iv_regression4 <- ivreg(paste(lhs, "|", dest_interactions, rho_instrument, back, sep = " "), 
+  iv_regression4 <- ivreg(paste(lhs, "|", hub_interactions, rho_instrument, back, sep = " "), 
                           data = product_data)
   iv_regression4.summary <- summary(iv_regression4)
   iv_regression4.summary
   
   # Regression 5: Origin, GM
-  iv_regression5 <- ivreg(paste(lhs, "|", gasmiles, origin_interactions, 
+  iv_regression5 <- ivreg(paste(lhs, "|", gasmiles, hub_interactions, 
                                 rho_instrument, back, sep = " "), 
                           data = product_data)
   iv_regression5.summary <- summary(iv_regression5)
@@ -283,7 +282,7 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   
   
   # Regression 6: Origin, Gandhi
-  iv_regression6 <- ivreg(paste(lhs, "|", origin_interactions, 
+  iv_regression6 <- ivreg(paste(lhs, "|", hub_interactions, 
                                 gandhi_instrument,
                                 rho_instrument, back, sep = " "), 
                           data = product_data)
@@ -291,7 +290,7 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   iv_regression6.summary
   
   # Regression 7: Origin, GM, Gandhi
-  iv_regression7 <- ivreg(paste(lhs, "|", gasmiles, origin_interactions, 
+  iv_regression7 <- ivreg(paste(lhs, "|", gasmiles, hub_interactions, 
                                 gandhi_instrument,
                                 rho_instrument, back, sep = " "), 
                           data = product_data)
@@ -300,7 +299,7 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   
   
   # Regression 8: Origin, Gandhi, Exog Interactions
-  iv_regression8 <- ivreg(paste(lhs, "|", origin_interactions, exog_interactions,
+  iv_regression8 <- ivreg(paste(lhs, "|", hub_interactions, exog_interactions,
                                 gandhi_instrument,
                                 rho_instrument, back, sep = " "), 
                           data = product_data)
@@ -308,8 +307,7 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   iv_regression8.summary
   
   # Regression 9: Origin, Dest, Gandhi, Exog
-  iv_regression9 <- ivreg(paste(lhs, "|", gasmiles, origin_interactions,
-                                dest_interactions,
+  iv_regression9 <- ivreg(paste(lhs, "|", gasmiles, hub_interactions,
                                 exog_interactions,
                                 gandhi_instrument,
                                 rho_instrument, back, sep = " "), 
@@ -364,13 +362,10 @@ instrument_comparison_table <- function(input_file = "02.Intermediate/Product_Da
   extra_rows <- list("Products in Market" = c("", rep("X", times = 8)),
                      "Gas Instruments" = c("", "X","",
                                            "", "X", "",
-                                           "X", "X", "X"),
-                     "Origin Interactions" = c("", "", "X",
-                                               "", "X", "X",
+                                           "X", "", "X"),
+                     "Hub Interactions" = c("", "", "X",
+                                               "X", "X", "X",
                                                "X", "X", "X"),
-                     "Destination Interactions" = c("", "", "", "X",
-                                                    "", "", "", "",
-                                                    "X"),
                      "Gandhi Instruments" = c("", "", "", "",
                                               "", "X", "X", "X",
                                               "X"),
@@ -467,8 +462,7 @@ prepan_instrument_comparison_table <- function(input_file = "02.Intermediate/Pro
   blp_instruments <- "Average_Other_Distance +Average_Other_Distance_Square + Rival_Direct +
   Average_Rival_Origin_Ratio + Average_Rival_Dest_Ratio + "
   
-  hub_interactions <- "Destination_Hub + MktMiles_DestinationHub + 
-                    MktMilesSq_DestinationHub + NonStop:Destination_Hub + "
+  hub_interactions <- "Hub_Endpoint + Hub_End_MktMiles + Hub_End_MktMiles_Sq +"
   
   gandhi_instrument <- c()
   max_gandhi <- max(as.numeric(substr(colnames(product_data)[grepl(pattern = "demand_instruments", 

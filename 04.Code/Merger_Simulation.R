@@ -10,6 +10,9 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
   # First, Generate Product Data
   product_data <- as.data.table(readRDS(input_file))
   
+  # Drop Products with Severe Outliers for Distance
+  product_data <- product_data[MktMilesFlown < quantile(MktMilesFlown, probs = (0.99))]
+  
   # Restrict to sample period
   product_data <- product_data[Year %in% years_allowed, ]; gc();
 
@@ -44,6 +47,7 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
   product_data <- product_data[!(Origin_MSA %in% hi_ak),]
   product_data <- product_data[!(Destination_MSA %in% hi_ak),]
   gc();
+  
   
   product_data[, Potential_Passengers := sqrt(Origin.Population) * sqrt(Destination.Population)]
   product_data[, Share := Passengers.Product / Potential_Passengers]
@@ -540,7 +544,7 @@ airport_service_ratios_merger <- function(db1b){
 merger_simulation_advanced <- function(model_in = "03.Output/nested_rcl_optimal.pickle",
                                        data_in = "02.Intermediate/Product_Data.rds",
                                        data_out = "03.Output/Adv_Merger_Sim_Data.rds",
-                                       linear = pyblp$Formulation('0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Tourism + C(Year_Quarter_Effect) + C(Carrier)'),
+                                       linear = pyblp$Formulation('0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Extra_Miles_Sq + Tourism + C(Year_Quarter_Effect) + C(Carrier)'),
                                        nonlinear = pyblp$Formulation("0 + prices + NonStop"),
                                        mode = "rcl"){
   model <- py_load_object(model_in)
