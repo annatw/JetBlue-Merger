@@ -299,6 +299,7 @@ combined_rcl_output_table()
 combined_rcl_output_table(post_in = "03.Output/random_coeff_nested_logit_fs_results.pickle",
                           pre_in = "03.Output/pre_pandemic_random_coeff_nested_logit_fs_results.pickle", 
                           output_table = "06.Tables/Demand_Unoptimal.tex")
+rcl_two_period_table_present()
 ```
 
 
@@ -308,45 +309,31 @@ combined_rcl_output_table(post_in = "03.Output/random_coeff_nested_logit_fs_resu
 merger_simulation_basic()
 merger_results_basic()
 merger_simulation_advanced()
-merger_results_table()
+#merger_results_table()
 change_minimum_fare()
 merger_change_pass_graph()
 
 # Pre-Pandemic
-merger_simulation_basic(rcl_in = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+merger_simulation_basic(model_in = "03.Output/prepandemic_random_coeff_nested_logit.pickle",
                            data_in = "02.Intermediate/prepandemic.rds",
                            data_out = "03.Output/PrePandemic_Basic_Merger_Sim_Data.rds")
 merger_results_basic(merger_data = "03.Output/PrePandemic_Basic_Merger_Sim_Data.rds",
                                  observed_data = "02.Intermediate/prepandemic.rds", 
-                                 rcl_file = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+                                 rcl_file = "03.Output/prepandemic_random_coeff_nested_logit.pickle",
                                  table_out = "06.Tables/PrePandemicMerger_Basic.tex")
-merger_simulation_advanced(rcl_in = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+merger_simulation_advanced(model_in = "03.Output/prepandemic_random_coeff_nested_logit.pickle",
                            data_in = "02.Intermediate/prepandemic.rds",
                            data_out = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds")
-merger_results_table(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
-                     observed_data = "02.Intermediate/prepandemic.rds",
-                     table_out = "06.Tables/PrePandemic_Merger_Results.tex",
-                     rcl = "03.Output/pre_pandemic_nested_rcl_optimal.pickle")
+# merger_results_table(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
+#                      observed_data = "02.Intermediate/prepandemic.rds",
+#                      table_out = "06.Tables/PrePandemic_Merger_Results.tex",
+#                      rcl = "03.Output/prepandemic_random_coeff_nested_logit.pickle")
 change_minimum_fare(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
                     observed_data = "02.Intermediate/prepandemic.rds",
                     graph_out = "05.Figures/PrePandemic_Merger_Change_MinimumFare.pdf")
 merger_change_pass_graph(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
                     observed_data = "02.Intermediate/prepandemic.rds",
                     graph_out = "05.Figures/PrePandemic_ChangePassengers.pdf")
-
-# 2019
-merger_simulation_advanced(rcl_in = "03.Output/2019_nested_rcl_optimal.pickle",
-                           data_in = "02.Intermediate/2019_data.rds",
-                           data_out = "03.Output/2019_Adv_Merger_Sim_Data.rds")
-merger_results_table(merger_data = "03.Output/2019_Adv_Merger_Sim_Data.rds",
-                      observed_data = "02.Intermediate/2019_data.rds",
-                     table_out = "06.Tables/2019_Merger_Results.tex",
-                     rcl = "03.Output/2019_nested_rcl_optimal.pickle")
-change_minimum_fare(merger_data = "03.Output/2019_Adv_Merger_Sim_Data.rds",
-                    observed_data = "02.Intermediate/2019_data.rds",
-                    graph_out = "05.Figures/2019_Merger_Change_MinimumFare.pdf")
-
-
 ```
 
 # Generate Summary Statistics Tables

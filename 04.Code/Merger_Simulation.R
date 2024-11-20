@@ -342,7 +342,7 @@ merger_simulation_basic <- function(model_in = "03.Output/random_coeff_nested_lo
 
 merger_results_basic <- function(merger_data = "02.Intermediate/Basic_Sim_Product_Data.rds",
                                  observed_data = "02.Intermediate/Product_Data.rds", 
-                                 rcl_file = "03.Output/nested_rcl_optimal.pickle",
+                                 rcl_file = "03.Output/random_coeff_nested_logit_fs_results.pickle",
                                  table_out = "06.Tables/Merger_Basic.tex"){
   merger <- readRDS(merger_data)
   observed <- readRDS(observed_data)
@@ -541,11 +541,11 @@ airport_service_ratios_merger <- function(db1b){
 }
 
 
-merger_simulation_advanced <- function(model_in = "03.Output/nested_rcl_optimal.pickle",
+merger_simulation_advanced <- function(model_in = "03.Output/random_coeff_nested_logit_fs_results.pickle",
                                        data_in = "02.Intermediate/Product_Data.rds",
                                        data_out = "03.Output/Adv_Merger_Sim_Data.rds",
                                        linear = pyblp$Formulation('0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Extra_Miles_Sq + Tourism + C(Year_Quarter_Effect) + C(Carrier)'),
-                                       nonlinear = pyblp$Formulation("0 + prices + NonStop"),
+                                       nonlinear = pyblp$Formulation("0 + prices + NonStop + MktMilesFlown"),
                                        mode = "rcl"){
   model <- py_load_object(model_in)
   data <- readRDS(data_in)
@@ -649,7 +649,7 @@ merger_simulation_advanced <- function(model_in = "03.Output/nested_rcl_optimal.
 merger_results_table <- function(merger_data = "03.Output/Adv_Merger_Sim_Data.rds",
                                  observed_data = "02.Intermediate/Product_Data.rds", 
                                  table_out = "06.Tables/Merger_Results.tex",
-                                 rcl = "03.Output/nested_rcl_optimal.pickle"){
+                                 rcl = "03.Output/random_coeff_nested_logit_fs_results.pickle"){
   merger <- readRDS(merger_data)
   observed <- readRDS(observed_data)
   rcl <- py_load_object(rcl)

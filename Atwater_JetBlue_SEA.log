@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.23)  10 NOV 2024 16:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.6.23)  19 NOV 2024 14:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1375,6 +1375,8 @@ put line 78.
 
 ] [18
 
+] [19
+
 ] (./Atwater_JetBlue_SEA.bbl
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
@@ -1398,10 +1400,10 @@ Package rerunfilecheck Info: File `Atwater_JetBlue_SEA.out' has not changed.
 (rerunfilecheck)             Checksum: 02E40BA93004BAEBB98ACAD30C08568A;471.
  ) 
 Here is how much of TeX's memory you used:
- 35570 strings out of 478994
- 798788 string characters out of 5858184
+ 35574 strings out of 478994
+ 798823 string characters out of 5858184
  1101583 words of memory out of 5000000
- 52400 multiletter control sequences out of 15000+600000
+ 52402 multiletter control sequences out of 15000+600000
  405853 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  131i,16n,132p,1616b,551s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1409,10 +1411,10 @@ Here is how much of TeX's memory you used:
 ></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb>
 </usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></
 usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb>
-Output written on Atwater_JetBlue_SEA.pdf (18 pages, 84828 bytes).
+Output written on Atwater_JetBlue_SEA.pdf (19 pages, 86003 bytes).
 PDF statistics:
- 636 PDF objects out of 1000 (max. 8388607)
- 598 compressed objects within 6 object streams
- 42 named destinations out of 1000 (max. 500000)
+ 670 PDF objects out of 1000 (max. 8388607)
+ 630 compressed objects within 7 object streams
+ 44 named destinations out of 1000 (max. 500000)
  88 words of extra memory for PDF output out of 10000 (max. 10000000)
 
