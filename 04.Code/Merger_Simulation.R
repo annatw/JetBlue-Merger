@@ -857,27 +857,27 @@ merger_results_table <- function(merger_data = "03.Output/Adv_Merger_Sim_Data.rd
                                       max(merger_JB$Origin_Ratio.Max), max(merger_Rv$Origin_Ratio.Max)), digits = 3))
   
   # Estimate Change in Consumer Surplus
-  merger_shared[, ChangeCS.MinCost := CS.MinCost.Sim - CS.Original]
-  merger_shared[, ChangeCS.MeanCost := CS.MeanCost.Sim - CS.Original]
-  merger_shared[, ChangeCS.MaxCost := CS.MaxCost.Sim - CS.Original]
+  # merger_shared[, ChangeCS.MinCost := CS.MinCost.Sim - CS.Original]
+  # merger_shared[, ChangeCS.MeanCost := CS.MeanCost.Sim - CS.Original]
+  # merger_shared[, ChangeCS.MaxCost := CS.MaxCost.Sim - CS.Original]
   
-  cs_merger_shared <- unique(merger_shared[, .(market_ids, ChangeCS.MinCost, ChangeCS.MeanCost,
-                                        ChangeCS.MaxCost)])
-  
-  CS_Change.min <- c("Minimum", "", "", "", "", round(min(merger_shared$ChangeCS.MinCost), digits = 2), "",
-                     round(min(merger_shared$ChangeCS.MeanCost), digits = 2),
-                     "", round(min(merger_shared$ChangeCS.MaxCost), digits = 2))
-  CS_Change.mean <- c("Average", "", "", "", "",
-                      round(mean(merger_shared$ChangeCS.MinCost), digits = 2), "",
-                      round(mean(merger_shared$ChangeCS.MeanCost), digits = 2),
-                     "", round(mean(merger_shared$ChangeCS.MaxCost), digits = 2))
-  CS_Change.max <- c("Maximum", "", "", "", "", round(max(merger_shared$ChangeCS.MinCost), digits = 2),
-                     "", round(max(merger_shared$ChangeCS.MeanCost), digits = 2),
-                     "", round(max(merger_shared$ChangeCS.MaxCost), digits = 2))
-  CS_Change.Total <- c("Total", "","","","", round(sum(merger_shared$ChangeCS.MinCost), digits = 2), "", 
-                       round(sum(merger_shared$ChangeCS.MeanCost), digits = 2),
-                 "", round(sum(merger_shared$ChangeCS.MaxCost), digits = 2))
-    
+  # cs_merger_shared <- unique(merger_shared[, .(market_ids, ChangeCS.MinCost, ChangeCS.MeanCost,
+  #                                       ChangeCS.MaxCost)])
+  # 
+  # CS_Change.min <- c("Minimum", "", "", "", "", round(min(merger_shared$ChangeCS.MinCost), digits = 2), "",
+  #                    round(min(merger_shared$ChangeCS.MeanCost), digits = 2),
+  #                    "", round(min(merger_shared$ChangeCS.MaxCost), digits = 2))
+  # CS_Change.mean <- c("Average", "", "", "", "",
+  #                     round(mean(merger_shared$ChangeCS.MinCost), digits = 2), "",
+  #                     round(mean(merger_shared$ChangeCS.MeanCost), digits = 2),
+  #                    "", round(mean(merger_shared$ChangeCS.MaxCost), digits = 2))
+  # CS_Change.max <- c("Maximum", "", "", "", "", round(max(merger_shared$ChangeCS.MinCost), digits = 2),
+  #                    "", round(max(merger_shared$ChangeCS.MeanCost), digits = 2),
+  #                    "", round(max(merger_shared$ChangeCS.MaxCost), digits = 2))
+  # CS_Change.Total <- c("Total", "","","","", round(sum(merger_shared$ChangeCS.MinCost), digits = 2), "", 
+  #                      round(sum(merger_shared$ChangeCS.MeanCost), digits = 2),
+  #                "", round(sum(merger_shared$ChangeCS.MaxCost), digits = 2))
+  #   
   N_Markets <- c("Number of Markets", length(shared_markets), length(shared_markets), length(shared_markets),
                  length(shared_markets), length(shared_markets), length(shared_markets), length(shared_markets),
                  length(shared_markets), length(shared_markets))
@@ -886,7 +886,7 @@ merger_results_table <- function(merger_data = "03.Output/Adv_Merger_Sim_Data.rd
                  price_min, price_row, price_max, mc_min,  mc_row, mc_max,
                  miles_min, miles_row, miles_max,
                  origin_min, origin_row, origin_max,
-                 CS_Change.min, CS_Change.mean, CS_Change.max, CS_Change.Total,
+                # CS_Change.min, CS_Change.mean, CS_Change.max, CS_Change.Total,
                  N_Markets)
   
   rownames(table) <- NULL
@@ -906,8 +906,8 @@ merger_results_table <- function(merger_data = "03.Output/Adv_Merger_Sim_Data.rd
     pack_rows("Marginal Cost", start_row = 10, end_row = 12) %>%
     pack_rows("Miles Flown", start_row = 13, end_row = 15) %>%
     pack_rows("Origin Service Ratio", start_row = 16, end_row = 18) %>%
-    pack_rows("Change in Consumer Surplus", start_row = 19, end_row = 22) %>%
-    row_spec(row = 22, hline_after = TRUE) %>%
+   # pack_rows("Change in Consumer Surplus", start_row = 19, end_row = 22) %>%
+    row_spec(row = 18, hline_after = TRUE) %>%
     save_kable(file = table_out)
   
 }

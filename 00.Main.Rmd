@@ -309,7 +309,7 @@ rcl_two_period_table_present()
 merger_simulation_basic()
 merger_results_basic()
 merger_simulation_advanced()
-#merger_results_table()
+merger_results_table()
 change_minimum_fare()
 merger_change_pass_graph()
 
@@ -324,10 +324,10 @@ merger_results_basic(merger_data = "03.Output/PrePandemic_Basic_Merger_Sim_Data.
 merger_simulation_advanced(model_in = "03.Output/prepandemic_random_coeff_nested_logit.pickle",
                            data_in = "02.Intermediate/prepandemic.rds",
                            data_out = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds")
-# merger_results_table(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
-#                      observed_data = "02.Intermediate/prepandemic.rds",
-#                      table_out = "06.Tables/PrePandemic_Merger_Results.tex",
-#                      rcl = "03.Output/prepandemic_random_coeff_nested_logit.pickle")
+merger_results_table(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
+                     observed_data = "02.Intermediate/prepandemic.rds",
+                     table_out = "06.Tables/PrePandemic_Merger_Results.tex",
+                     rcl = "03.Output/prepandemic_random_coeff_nested_logit.pickle")
 change_minimum_fare(merger_data = "03.Output/PrePandemic_Adv_Merger_Sim_Data.rds",
                     observed_data = "02.Intermediate/prepandemic.rds",
                     graph_out = "05.Figures/PrePandemic_Merger_Change_MinimumFare.pdf")
