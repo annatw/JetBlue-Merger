@@ -39,7 +39,7 @@
 
 \title{Flying the JetBlue Skies}
 \subtitle{Proposed Spirit Merger and Competition in Aviation}
-\date{November 22, 2024}
+\date{November 23, 2024}
 
 \usetheme{Berkeley}
 
@@ -60,157 +60,147 @@
 	\begin{frame}
 		\frametitle{Preview of Results}
 		\begin{itemize}
-			\item 
-		\end{itemize}
-	\end{frame}
-	
-	\begin{frame}
-		\frametitle{Literature Review}
-		\begin{itemize}
-			\item 
-		\end{itemize}
-	\end{frame}
-		
-	\begin{frame}
-		\frametitle{Setting}
-		\framesubtitle{Industry Ridership}
-		\includegraphics[width = \textwidth]{Quarterly_DB1B_Itineraries}
-	\end{frame}
-		
-	\section{Setting}
-	\begin{frame}
-		\frametitle{Setting}
-		\framesubtitle{United States Aviation Market}
-		\begin{itemize}
-			\item Post-Industry Coronavirus Changes
+			\item  In the average JetBlue-Spirit market, customers would have paid \$876,000 more following the merger. 
+			\item Under favorable assumptions, minimum fares would have risen by \$4 after the merger.
 			\begin{itemize}
-				\item Increased Tourist Travelers 
-				\item Decreased Business Travelers
-				\item Unclear Expectation of Change to Elasticity
+				\item Under the least favorable assumptions, minimum fares would have risen by over \$20 following the merger. 
 			\end{itemize}
-		\end{itemize} 
+			\item Price changes following the merger are strongest at lower end of the fare distribution, consistent with ruling in the case.
+		\end{itemize}
 	\end{frame}
-
-
-
+		
 	\begin{frame}
 		\frametitle{Setting}
 		\framesubtitle{Spirit and JetBlue}
 			\begin{itemize}
 			\item JetBlue 
 			\begin{itemize}
-				\item Second (?) Largest Low-Cost Carrier
+				\item Third Largest Low-Cost Carrier 
+				\item Recent Anti-Competitive Conduct
+				\begin{itemize}
+					\item Northeast Alliance with American
+					\item Attempted Spirit Merger
+				\end{itemize}
 			\end{itemize}
 			\item Spirit 
 			\begin{itemize}
 				\item Largest Ultra-Low Cost Carrier
-				\item Maverick Firm Focused on Extremely Budget Focused Travelers 
-			\end{itemize}
-			\item Both 
-			\begin{itemize}
-	 		\item East Coast Focus
-	 		\item Airbus A321 Fleets
+				\item Maverick Firm Focused on Budget Focused Travelers 
+				\item Monday: Filed for Chapter 11 Bankruptcy
 			\end{itemize}
 		\end{itemize} 
 	\end{frame}
 
 	\section{Data}
 	\begin{frame}
-		\frametitle{Data Sources}
+		\frametitle{Data}
 		\begin{itemize}
 			\item Airline Origin and Destination Survey (DB1B)
 			\begin{itemize}
-				\item 10\% Sample of Domestic Itineraries 
+				\item 10\% Sample of Domestic Passenger Itineraries 
 				\item Data on Origin, Destination, Price, Route, Carrier
 			\end{itemize}
-			\item Energy Information Administration Jet Fuel Spot Price
-			\item Census Population Data
+			\item Markets defined as Year-Quarter-Origin-Destination 
+			\item Market Size is the Geometric Mean of the Population of Origin, Destination Metropolitan Statistical Areas
+			\item Products Further Defined by Carrier, Nonstop Status
+			\begin{itemize}
+				\item Air Travel in One Nest, Outside Good in the Other. 
+			\end{itemize}
 		\end{itemize}
 	\end{frame}
 	
-	\begin{frame}
-		\frametitle{Market, Product Definitions}
-		\begin{itemize}
-			\item Markets defined as Year-Quarter-Origin-Destination 
-			\item Market Size is the Geometric Mean of the Population of the Origin, Destination MSA
-			\item Products Further Defined by Carrier, Nonstop Status
-			\begin{itemize}
-				\item Connecting Product Characteristics are Weighted Average of Connecting Itineraries from a Firm
-			\end{itemize}
-		\end{itemize}
-	\end{frame}
 
 	\section{Model and Results}
 	\begin{frame}
-		\frametitle{Model of Interest}
-		
+		\frametitle{Random Coefficient Nested Logit}
+		\begin{itemize}
+			\item  Consumer $i$ in market $t$ has indirect utility from buying product $j$ as defined by 
+\[U_{ijt} = \delta_{jt} + \mu_{ijt} + \epsilon_{ijt}\]
+		\item $\delta_{jt}$ is the mean utility across consumers in market $t$ for product $j$
+		\item $\mu_{ijt}$ is the consumer's deviation from this mean utility
+		\item  $\epsilon_{ijt}$ is an unobserved consumer-level shock such that \[\epsilon_{ijt} = \bar{\epsilon}_{ih(j)t} + (1 - \rho)\bar{\epsilon}_{ijt}\] 
+		\item $\rho$ is the nesting parameter. 
+		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Random Coefficient Nested Logit Results}
-		\resizebox*{2in}{!}{
-		\begin{tabular}[t]{lll}
-			\toprule
-			Variable & Post-Pandemic & Pre-Pandemic\\
-			\midrule
-			Price & -3.114 & -2.947\\
-			& (0.44) & (0.34)\\
-			\midrule
-			Price & 0.599 & 0.59\\
-			& (0.12) & (0.12)\\
-			\midrule
-			Nesting Parameter & 0.115 & 0.136\\
-			\addlinespace
-			& (0.032) & (0.045)\\
-			\midrule
-			Period & 2017Q1-2019Q4 & 2021Q2-2023Q2\\
-			N Products & 265196 & 307849\\
-			N Markets & 70016 & 87363\\
-			Mean Elasticity & -5.211 & -5.323\\
-			\addlinespace
-			Spirit Mean Elasticity & -3.44 & -3.15\\
-			JetBlue Mean Elasticity & -5.18 & -5.16\\
-			Mean Markup & 0.21 & 0.203\\
-			\bottomrule
-		\end{tabular}
+		\resizebox*{2.35in}{!}{
+			\input{06.Tables/RCL_Both_Period_Present}
 	}
 		
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Merger Simulation}
+		\begin{itemize}
+			\item Three Counterfactuals
+			\begin{itemize}
+				\item JetBlue, Spirit Products Combine
+				\item Resulting Products Have:
+				\begin{itemize}
+					\item Lowest Marginal Cost of the Two
+					\item Average Marginal Cost of the Two
+					\item Highest Marginal Cost
+				\end{itemize}
+			\end{itemize}
+			\item Today: Post-Pandemic Change in Minimum Fare
+		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}
-		\frametitle{Merger Simulation Results}
-		
+		\frametitle{Merger Simulation Results: Minimum Fare}
+		\framesubtitle{Lowest Marginal Cost}
+		\includegraphics[width = 3.75in]{Merger_Change_MinimumFare_BestCase.pdf}
 	\end{frame}
-	
+		
+	\begin{frame}
+			\frametitle{Merger Simulation Results: Minimum Fare}
+			\framesubtitle{Average Marginal Cost}
+			\includegraphics[width = 3.75in]{Merger_Change_MinimumFare_AverageCase.pdf}
+		\end{frame}
+		
 		\begin{frame}
-		\frametitle{Merger Simulation Results: Average Market Fares}
-		
-	\end{frame}
-	
-	\begin{frame}
-		\frametitle{Merger Simulation Results: Minimum Market Fares}
-		
-	\end{frame}
-	
-
-	
+			\frametitle{Merger Simulation Results: Minimum Fare}
+			\framesubtitle{Greatest Marginal Cost}
+			\includegraphics[width = 3.75in]{Merger_Change_MinimumFare_WorstCase.pdf}
+       \end{frame}	
+       	
+       		\begin{frame}
+       		\frametitle{Merger Simulation Results: Average Fare}
+       		\framesubtitle{Lowest Marginal Cost}
+       	\includegraphics[width = 3.75in]{Merger_Change_AverageFare_BestCase.pdf}
+       	\end{frame}
+       	
+       	\begin{frame}
+       		\frametitle{Merger Simulation Results: Average Fare}
+       		\framesubtitle{Average Marginal Cost}
+       		\includegraphics[width = 3.75in]{Merger_Change_AverageFare_AverageCase.pdf}
+       	\end{frame}
+       	
+       	\begin{frame}
+       		\frametitle{Merger Simulation Results: Average Fare}
+       		\framesubtitle{Greatest Marginal Cost}
+       	\includegraphics[width = 3.75in]{Merger_Change_AverageFare_WorstCase.pdf}
+       	\end{frame}	
+       	
 	\section{Conclusion}
 	\begin{frame}
 		\frametitle{Conclusion}
-
-	\end{frame}
-
-
-	\begin{frame}
-		\frametitle{Thank You}
+		\begin{itemize}
+			\item Minimum [Average] Market Fares in JetBlue-Spirit Markets Would have Increased by:
+			\begin{itemize}
+				\item Best Case: 4.47 [3.90]
+				\item Average Case: 17.82 [8.51]
+				\item Worst Case: 22.80 [13.18]
+			\end{itemize}
+			\item In the average JetBlue-Spirit market under the average cost scenario, customers would have paid \$876,000 more following the merger. 
+		\end{itemize}
 	\end{frame}
 
 	\bibliography{airline}
 	\bibliographystyle{abbrvnat.bst}
+	
 	
 \end{document}
 
