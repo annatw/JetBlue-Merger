@@ -1,0 +1,73 @@
+This is BibTeX, Version 0.99d (TeX Live 2021)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Current_Draft.aux
+The style file: abbrvnat.bst.bst
+A level-1 auxiliary file: 06.Tables/NEA_Zou_TB1_Replicate.aux
+A level-1 auxiliary file: 06.Tables/NEA_Percentage_Tied_Up.aux
+A level-1 auxiliary file: 06.Tables/JetBlue_Spirit_Fleet.aux
+A level-1 auxiliary file: 06.Tables/OverlapCities.aux
+A level-1 auxiliary file: 06.Tables/NEA_Probability_Switches.aux
+A level-1 auxiliary file: 06.Tables/NEA_Price_Neutrality.aux
+A level-1 auxiliary file: 06.Tables/NEA_Price_Neutrality_Y.aux
+A level-1 auxiliary file: 06.Tables/NEA_Market_Fare.aux
+A level-1 auxiliary file: 06.Tables/NEA_Market_Yield.aux
+A level-1 auxiliary file: 06.Tables/Elasticity_Compare_Table.aux
+A level-1 auxiliary file: 06.Tables/Demand_Unoptimal.aux
+A level-1 auxiliary file: 06.Tables/RCL_Both_Period_Output.aux
+A level-1 auxiliary file: 06.Tables/prepandemic_SummaryStatistics_Product.aux
+A level-1 auxiliary file: 06.Tables/prepandemic_SummaryStatistics_Market.aux
+A level-1 auxiliary file: 06.Tables/prepandemic_InstrumentTable.aux
+A level-1 auxiliary file: 06.Tables/Prepandemic_RCL_Results.aux
+A level-1 auxiliary file: 06.Tables/PrePandemicMerger_Basic.aux
+A level-1 auxiliary file: 06.Tables/PrePandemic_Merger_Results.aux
+A level-1 auxiliary file: 06.Tables/SummaryStatistics_Product.aux
+A level-1 auxiliary file: 06.Tables/SummaryStatistics_Market.aux
+A level-1 auxiliary file: 06.Tables/Instrument_Compare_Table.aux
+A level-1 auxiliary file: 06.Tables/Merger_Basic.aux
+A level-1 auxiliary file: 06.Tables/Merger_Results.aux
+A level-1 auxiliary file: 06.Tables/Stance_Taken_Summary.aux
+Database file #1: airline.bib
+Warning--I'm ignoring gandhi_measuring_2019's extra "doi" field
+--line 1144 of file airline.bib
+You've used 44 entries,
+            2773 wiz_defined-function locations,
+            924 strings with 16470 characters,
+and the built_in function-call counts, 17735 in all, are:
+= -- 1723
+> -- 757
+< -- 37
++ -- 271
+- -- 225
+* -- 1362
+:= -- 2772
+add.period$ -- 207
+call.type$ -- 44
+change.case$ -- 207
+chr.to.int$ -- 42
+cite$ -- 88
+duplicate$ -- 791
+empty$ -- 1550
+format.name$ -- 293
+if$ -- 3716
+int.to.chr$ -- 3
+int.to.str$ -- 1
+missing$ -- 26
+newline$ -- 303
+num.names$ -- 176
+pop$ -- 383
+preamble$ -- 1
+purify$ -- 163
+quote$ -- 0
+skip$ -- 598
+stack$ -- 0
+substring$ -- 551
+swap$ -- 85
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 484
+warning$ -- 0
+while$ -- 171
+width$ -- 0
+write$ -- 705
+(There was 1 warning)

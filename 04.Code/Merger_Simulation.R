@@ -278,7 +278,7 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
   ### Generate Differentiation Instruments ###
   if(!fast){
     gandhi_instruments <- pyblp$build_differentiation_instruments(
-      pyblp$Formulation("NonStop + MktMilesFlown + MktMilesFlown_Sq + Extra_Miles + Origin_Firm_Service_Ratio"),
+      pyblp$Formulation("NonStop + MktMilesFlown + I(MktMilesFlown**2) + Extra_Miles + Origin_Firm_Service_Ratio"),
       product_data,
       interact = F)
   
@@ -314,7 +314,7 @@ merger_sim_data_generate <- function(input_file = "02.Intermediate/DB1B_With_Con
 }
 
 
-merger_simulation_basic <- function(model_in = "03.Output/random_coeff_nested_logit_fs_results.pickle",
+merger_simulation_basic <- function(model_in = "03.Output/random_coeff_nested_logit_results.pickle",
                                     data_in = "02.Intermediate/Product_Data.rds",
                                     data_out = "02.Intermediate/Basic_Sim_Product_Data.rds"){
   model <- py_load_object(model_in)
@@ -324,16 +324,17 @@ merger_simulation_basic <- function(model_in = "03.Output/random_coeff_nested_lo
   data[Carrier == "Spirit Air Lines", merger_carrier := "JetBlue Airways"]
   
   data[, merger_ids := firm_ids]
-  data[firm_ids == 9, merger_ids := 6] # Spirit -> JB
+  data[merger_ids == 9, merger_ids := 6] # Spirit -> JB
 
+  data[, cost := model$compute_costs()]
+  
   new_prices <- model$compute_prices(firm_ids = data$merger_ids,
-                                   costs = model$compute_costs())
+                                     costs = data$cost)
   new_shares <- model$compute_shares(new_prices)
   
   data[, new.price := new_prices]
   data[, new.share := new_shares]
   
-  data[, cost := model$compute_costs()]
   data[, price.change := new.price - prices]
   data[, share.change := new.share - shares]
   
@@ -541,10 +542,10 @@ airport_service_ratios_merger <- function(db1b){
 }
 
 
-merger_simulation_advanced <- function(model_in = "03.Output/random_coeff_nested_logit_fs_results.pickle",
+merger_simulation_advanced <- function(model_in = "03.Output/random_coeff_nested_logit_results.pickle",
                                        data_in = "02.Intermediate/Product_Data.rds",
                                        data_out = "03.Output/Adv_Merger_Sim_Data.rds",
-                                       linear = pyblp$Formulation('0 + prices + NonStop + MktMilesFlown + MktMilesFlown_Sq + Origin_Firm_Service_Ratio + Extra_Miles + Extra_Miles_Sq + Tourism + C(Year_Quarter_Effect) + C(Carrier)'),
+                                       linear = pyblp$Formulation('0 + prices + NonStop + MktMilesFlown + I(MktMilesFlown**2) + Origin_Firm_Service_Ratio + Extra_Miles + Extra_Miles_Sq + Tourism + C(Year_Quarter_Effect) + C(Carrier)'),
                                        nonlinear = pyblp$Formulation("0 + prices + NonStop + MktMilesFlown"),
                                        mode = "rcl"){
   model <- py_load_object(model_in)
@@ -603,8 +604,8 @@ merger_simulation_advanced <- function(model_in = "03.Output/random_coeff_nested
                                  product_data = data.new,
                                  beta = beta_vec,
                                  sigma = model$sigma,
-                                 integration = pyblp$Integration('product', size = 7L,
-                                       specification_options = dict("seed" = 413L)),
+                                 integration = pyblp$Integration('product', 9L,
+                                            specification_options = dict("seed" = 97L)),
                                  xi = data.new$unobserved)
   
   simulation.min <- simulation$replace_endogenous(costs = data.new$costs.min); gc(); 
@@ -649,7 +650,7 @@ merger_simulation_advanced <- function(model_in = "03.Output/random_coeff_nested
 merger_results_table <- function(merger_data = "03.Output/Adv_Merger_Sim_Data.rds",
                                  observed_data = "02.Intermediate/Product_Data.rds", 
                                  table_out = "06.Tables/Merger_Results.tex",
-                                 rcl = "03.Output/random_coeff_nested_logit_fs_results.pickle"){
+                                 rcl = "03.Output/random_coeff_nested_logit_results.pickle"){
   merger <- readRDS(merger_data)
   observed <- readRDS(observed_data)
   rcl <- py_load_object(rcl)
@@ -912,8 +913,8 @@ merger_results_table <- function(merger_data = "03.Output/Adv_Merger_Sim_Data.rd
   
 }
 
-elasticity_compare_table <- function(postPand_input = "03.Output/nested_rcl_optimal.pickle",
-                                     prePand_input = "03.Output/pre_pandemic_nested_rcl_optimal.pickle",
+elasticity_compare_table <- function(postPand_input = "03.Output/random_coeff_nested_logit_results.pickle",
+                                     prePand_input = "03.Output/prepandemic_random_coeff_nested_logit.pickle",
                                      table_out = "06.Tables/Elasticity_Compare_Table.tex"){
   postPandemic <- py_load_object(postPand_input);
   prePandemic <- py_load_object(prePand_input);

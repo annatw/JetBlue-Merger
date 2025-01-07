@@ -678,7 +678,7 @@ rcl_two_period_table_present <- function(post_in = "03.Output/random_coeff_neste
                                          post_data_in = "02.Intermediate/Product_Data.rds",
                                          pre_in = "03.Output/prepandemic_random_coeff_nested_logit.pickle",
                                          pre_data_in = "02.Intermediate/prepandemic.rds",
-                                         output_table = "06.Tables/RCL_Both_Period_Output.tex"){
+                                         output_table = "06.Tables/RCL_Both_Period_Present.tex"){
   model.post <- py_load_object(post_in)
   product_post <- readRDS(post_data_in)
   model.pre <- py_load_object(pre_in)
@@ -694,7 +694,7 @@ rcl_two_period_table_present <- function(post_in = "03.Output/random_coeff_neste
                         se_b = model.pre$rho_se,
                         id = 1)  
   
-  prices.nonlinear <- two_model_make(label = "Price", model_a = model.post$sigma,
+  prices.nonlinear <- two_model_make(label = "Price ($\\sigma$)", model_a = model.post$sigma,
                                      model_b = model.pre$sigma, se_a = model.post$sigma_se,
                                      se_b = model.pre$sigma_se, id = 1)
 
@@ -727,6 +727,7 @@ rcl_two_period_table_present <- function(post_in = "03.Output/random_coeff_neste
   kbl(table_out,
       format = "latex", 
       escape = FALSE, booktabs = TRUE,
+      linesep = "",
       col.names = c("Variable", "Post-Pandemic", "Pre-Pandemic"))  %>%
     row_spec(row = 2, hline_after = TRUE) %>%
     row_spec(row = 4, hline_after = TRUE) %>%

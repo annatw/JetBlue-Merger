@@ -1,0 +1,394 @@
+\begin{thebibliography}{44}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Araci(2019)]{araci_finbert_2019}
+D.~Araci.
+\newblock {FinBERT}: {Financial} {Sentiment} {Analysis} with {Pre}-trained
+  {Language} {Models}, Aug. 2019.
+\newblock URL \url{https://arxiv.org/abs/1908.10063v1}.
+
+\bibitem[Aratani(2023)]{aratani_jetblue_2023}
+L.~Aratani.
+\newblock {JetBlue} won’t appeal ruling that blocks {American} {Airlines}
+  partnership.
+\newblock \emph{Washington Post}, July 2023.
+\newblock ISSN 0190-8286.
+\newblock URL
+  \url{https://www.washingtonpost.com/transportation/2023/07/05/jetblue-spirit-northeast-alliance/}.
+
+\bibitem[Bachwich and Wittman(2017)]{bachwich_emergence_2017}
+A.~R. Bachwich and M.~D. Wittman.
+\newblock The emergence and effects of the ultra-low cost carrier ({ULCC})
+  business model in the {U}.{S}. airline industry.
+\newblock \emph{Journal of Air Transport Management}, 62:\penalty0 155--164,
+  July 2017.
+\newblock ISSN 0969-6997.
+\newblock \doi{10.1016/j.jairtraman.2017.03.012}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S0969699716303969}.
+
+\bibitem[Bellamy~III(2020)]{bellamy_iii_jetblue_2020}
+W.~Bellamy~III.
+\newblock {JetBlue} {CEO} {Says} {Cabin}, {Fleet} {Refresh} to {Continue}
+  {Through} {COVID}-19, May 2020.
+\newblock URL
+  \url{https://www.aviationtoday.com/2020/05/28/jetblue-ceo-says-cabin-fleet-refresh-continue-covid-19/}.
+
+\bibitem[Berry and Jia(2010)]{berry_tracing_2010}
+S.~Berry and P.~Jia.
+\newblock Tracing the {Woes}: {An} {Empirical} {Analysis} of the {Airline}
+  {Industry}.
+\newblock \emph{American Economic Journal: Microeconomics}, 2\penalty0
+  (3):\penalty0 1--43, Aug. 2010.
+\newblock ISSN 1945-7669.
+\newblock \doi{10.1257/mic.2.3.1}.
+\newblock URL \url{https://www.aeaweb.org/articles?id=10.1257/mic.2.3.1}.
+
+\bibitem[Berry et~al.(1995)Berry, Levinsohn, and Pakes]{berry_automobile_1995}
+S.~Berry, J.~Levinsohn, and A.~Pakes.
+\newblock Automobile {Prices} in {Market} {Equilibrium}.
+\newblock \emph{Econometrica}, 63\penalty0 (4):\penalty0 841, July 1995.
+\newblock ISSN 00129682.
+\newblock \doi{10.2307/2171802}.
+\newblock URL \url{https://www.jstor.org/stable/2171802?origin=crossref}.
+
+\bibitem[Bet(2021)]{bet_market_2021}
+G.~Bet.
+\newblock Market {Power} in the {U}.{S}. {Airline} {Industry}, Aug. 2021.
+\newblock URL \url{https://papers.ssrn.com/abstract=3913695}.
+
+\bibitem[Birnbaum(2023)]{birnbaum_elizabeth_2023}
+E.~Birnbaum.
+\newblock Elizabeth {Warren} {Urges} {Regulators} to {Ignore}
+  {JetBlue}-{Orchestrated} {Comments} {Supporting} {Its} {Merger}.
+\newblock \emph{Bloomberg.com}, June 2023.
+\newblock URL
+  \url{https://www.bloomberg.com/news/articles/2023-06-23/warren-urges-regulators-to-ignore-jetblue-orchestrated-comments}.
+
+\bibitem[Birnbaum and Nylen(2023)]{birnbaum_jet-blue_2023}
+E.~Birnbaum and L.~Nylen.
+\newblock Jet-{Blue} {Workers} {Say} {Pro}-{Merger} {Comments} {Aren}'t
+  {Theirs}.
+\newblock \emph{Bloomberg Law}, May 2023.
+
+\bibitem[Carlton et~al.(2019)Carlton, Israel, MacSwain, and
+  Orlov]{carlton_are_2019}
+D.~Carlton, M.~Israel, I.~MacSwain, and E.~Orlov.
+\newblock Are legacy airline mergers pro- or anti-competitive? {Evidence} from
+  recent {U}.{S}. airline mergers.
+\newblock \emph{International Journal of Industrial Organization}, 62:\penalty0
+  58--95, Jan. 2019.
+\newblock ISSN 0167-7187.
+\newblock \doi{10.1016/j.ijindorg.2017.12.002}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S0167718717303533}.
+
+\bibitem[Chapman and Koenig(2024)]{chapman_jetblue_2024}
+M.~Chapman and D.~Koenig.
+\newblock {JetBlue} and {Spirit} are ending their \$3.8 billion merger plan
+  after a federal judge blocked the deal, Mar. 2024.
+\newblock URL
+  \url{https://apnews.com/article/jetblue-spirit-merger-court-airline-2d9a640e7f7ecb87d5f60c1cbffbc163}.
+\newblock Section: Business.
+
+\bibitem[Chokshi(2023)]{chokshi_justice_2023}
+N.~Chokshi.
+\newblock Justice {Dept}. {Sues} to {Block} {JetBlue}’s {Acquisition} of
+  {Spirit}.
+\newblock \emph{The New York Times}, Mar. 2023.
+\newblock ISSN 0362-4331.
+\newblock URL
+  \url{https://www.nytimes.com/2023/03/07/business/justice-department-jetblue-spirit-merger.html}.
+
+\bibitem[Ciliberto and Williams(2014)]{ciliberto_does_2014}
+F.~Ciliberto and J.~W. Williams.
+\newblock Does multimarket contact facilitate tacit collusion? {Inference} on
+  conduct parameters in the airline industry.
+\newblock \emph{The RAND Journal of Economics}, 45\penalty0 (4):\penalty0
+  764--791, 2014.
+\newblock ISSN 1756-2171.
+\newblock \doi{10.1111/1756-2171.12070}.
+\newblock URL
+  \url{https://onlinelibrary.wiley.com/doi/abs/10.1111/1756-2171.12070}.
+\newblock \_eprint:
+  https://onlinelibrary.wiley.com/doi/pdf/10.1111/1756-2171.12070.
+
+\bibitem[Ciliberto et~al.(2021)Ciliberto, Murry, and
+  Tamer]{ciliberto_market_2021}
+F.~Ciliberto, C.~Murry, and E.~Tamer.
+\newblock Market {Structure} and {Competition} in {Airline} {Markets}.
+\newblock \emph{Journal of Political Economy}, 129\penalty0 (11):\penalty0
+  2995--3038, Nov. 2021.
+\newblock ISSN 0022-3808.
+\newblock \doi{10.1086/715848}.
+\newblock URL \url{https://www.journals.uchicago.edu/doi/full/10.1086/715848}.
+\newblock Publisher: The University of Chicago Press.
+
+\bibitem[Conlon and Gortmaker(2020)]{conlon_best_2020}
+C.~Conlon and J.~Gortmaker.
+\newblock Best practices for differentiated products demand estimation with
+  {PyBLP}.
+\newblock \emph{The RAND Journal of Economics}, 51\penalty0 (4):\penalty0
+  1108--1161, 2020.
+\newblock ISSN 1756-2171.
+\newblock \doi{10.1111/1756-2171.12352}.
+\newblock URL
+  \url{https://onlinelibrary.wiley.com/doi/abs/10.1111/1756-2171.12352}.
+\newblock \_eprint:
+  https://onlinelibrary.wiley.com/doi/pdf/10.1111/1756-2171.12352.
+
+\bibitem[Elliott(2022)]{elliott_jetblue_2022}
+C.~Elliott.
+\newblock {JetBlue} and {Spirit}: {What} happens when two airlines with bad
+  customer service records merge?, Apr. 2022.
+\newblock URL
+  \url{https://www.usatoday.com/story/travel/airline-news/2022/04/08/jetblue-spirit-merger-airlines-customer-complaints/9511002002/}.
+
+\bibitem[Ewen(2023)]{ewen_zoom_2023}
+S.~Ewen.
+\newblock Zoom {Calls} and {Revenge} {Travel}: {Pandemic}-induced {Changes} to
+  {Demand} for {US} {Domestic} {Air} {Travel}, Apr. 2023.
+
+\bibitem[Gandhi and Houde(2019)]{gandhi_measuring_2019}
+A.~Gandhi and J.-F. Houde.
+\newblock Measuring {Substitution} {Patterns} in {Diﬀerentiated}-{Products}
+  {Industries}, Oct. 2019.
+\newblock URL \url{https://www.nber.org/papers/w26375}.
+
+\bibitem[Goolsbee and Syverson(2008)]{goolsbee_how_2008}
+A.~Goolsbee and C.~Syverson.
+\newblock How {Do} {Incumbents} {Respond} to the {Threat} of {Entry}?
+  {Evidence} from the {Major} {Airlines}*.
+\newblock \emph{The Quarterly Journal of Economics}, 123\penalty0 (4):\penalty0
+  1611--1633, Nov. 2008.
+\newblock ISSN 0033-5533.
+\newblock \doi{10.1162/qjec.2008.123.4.1611}.
+\newblock URL \url{https://doi.org/10.1162/qjec.2008.123.4.1611}.
+
+\bibitem[Griff(2021{\natexlab{a}})]{griff_8_2021}
+Z.~Griff.
+\newblock 8 things to know about the new {American} {Airlines}-{JetBlue}
+  partnership, Feb. 2021{\natexlab{a}}.
+\newblock URL
+  \url{https://thepointsguy.com/news/american-jetblue-alliance-key-facts/}.
+\newblock Section: News.
+
+\bibitem[Griff(2021{\natexlab{b}})]{griff_riding_2021}
+Z.~Griff.
+\newblock Riding the new {JFK} bus that streamlines {American}
+  {Airlines}-{JetBlue} connections, Sept. 2021{\natexlab{b}}.
+\newblock URL
+  \url{https://thepointsguy.com/news/american-jetblue-jfk-connection-bus/}.
+\newblock Section: News.
+
+\bibitem[Josephs(2022{\natexlab{a}})]{josephs_jetblue_2022}
+L.~Josephs.
+\newblock {JetBlue} makes all-cash offer for {Spirit} {Airlines}, complicating
+  planned {Frontier} tie-up, Apr. 2022{\natexlab{a}}.
+\newblock URL
+  \url{https://www.cnbc.com/2022/04/05/spirit-airlines-shares-spike-20percent-on-report-jetblue-has-made-bid-to-buy-airline.html}.
+\newblock Section: Airlines.
+
+\bibitem[Josephs(2022{\natexlab{b}})]{josephs_spirit_2022}
+L.~Josephs.
+\newblock Spirit ends merger agreement with {Frontier}, continues takeover
+  talks with {JetBlue}, July 2022{\natexlab{b}}.
+\newblock URL
+  \url{https://www.cnbc.com/2022/07/27/spirit-airlines-frontier-terminate-deal-that-was-marred-by-jetblues-rival-bid.html}.
+
+\bibitem[Koenig(2022)]{koenig_spirit_2022}
+D.~Koenig.
+\newblock Spirit {Airlines} shareholders approve \$3.{8B} sale to {JetBlue},
+  Oct. 2022.
+\newblock URL
+  \url{https://apnews.com/article/business-airlines-buyouts-033bac798251e704e558734847937deb}.
+
+\bibitem[Kwoka et~al.(2016)Kwoka, Hearle, and Alepin]{kwoka_fringe_2016}
+J.~Kwoka, K.~Hearle, and P.~Alepin.
+\newblock From the {Fringe} to the {Forefront}: {Low} {Cost} {Carriers} and
+  {Airline} {Price} {Determination}.
+\newblock \emph{Review of Industrial Organization}, 48\penalty0 (3):\penalty0
+  247--268, May 2016.
+\newblock ISSN 1573-7160.
+\newblock \doi{10.1007/s11151-016-9506-3}.
+\newblock URL \url{https://doi.org/10.1007/s11151-016-9506-3}.
+
+\bibitem[Laurer et~al.(2024)Laurer, Atteveldt, Casas, and
+  Welbers]{laurer_less_2024}
+M.~Laurer, W.~v. Atteveldt, A.~Casas, and K.~Welbers.
+\newblock Less {Annotating}, {More} {Classifying}: {Addressing} the {Data}
+  {Scarcity} {Issue} of {Supervised} {Machine} {Learning} with {Deep}
+  {Transfer} {Learning} and {BERT}-{NLI}.
+\newblock \emph{Political Analysis}, 32\penalty0 (1):\penalty0 84--100, Jan.
+  2024.
+\newblock ISSN 1047-1987, 1476-4989.
+\newblock \doi{10.1017/pan.2023.20}.
+\newblock URL
+  \url{https://www.cambridge.org/core/journals/political-analysis/article/less-annotating-more-classifying-addressing-the-data-scarcity-issue-of-supervised-machine-learning-with-deep-transfer-learning-and-bertnli/05BB05555241762889825B080E097C27}.
+
+\bibitem[Le and Yimga(2019)]{le_market_2019}
+H.~B. Le and J.~Yimga.
+\newblock Market {Power} and {Marginal} {Cost} {Effects} in {Competing}
+  {Markets}: {Evidence} from {Airline} {Mergers}.
+\newblock \emph{Review of Network Economics}, 18\penalty0 (2):\penalty0
+  63--108, June 2019.
+\newblock ISSN 1446-9022.
+\newblock \doi{10.1515/rne-2018-0024}.
+\newblock URL
+  \url{https://www.degruyter.com/document/doi/10.1515/rne-2018-0024/html}.
+\newblock Publisher: De Gruyter.
+
+\bibitem[Li et~al.(2022)Li, Mazur, Park, Roberts, Sweeting, and
+  Zhang]{li_repositioning_2022}
+S.~Li, J.~Mazur, Y.~Park, J.~Roberts, A.~Sweeting, and J.~Zhang.
+\newblock Repositioning and {Market} {Power} after {Airline} {Mergers}.
+\newblock \emph{RAND Journal of Economics}, 53\penalty0 (1):\penalty0 166--199,
+  2022.
+\newblock ISSN 07416261.
+\newblock URL
+  \url{https://search.ebscohost.com/login.aspx?direct=true&AuthType=ip,uid&db=ecn&AN=1989753&site=ehost-live}.
+
+\bibitem[Luo(2014)]{luo_price_2014}
+D.~Luo.
+\newblock The {Price} {Effects} of the {Delta}/{Northwest} {Airline} {Merger}.
+\newblock \emph{Review of Industrial Organization}, 44\penalty0 (1):\penalty0
+  27--48, 2014.
+\newblock ISSN 0889-938X.
+\newblock URL \url{https://www.jstor.org/stable/43550443}.
+\newblock Publisher: Springer.
+
+\bibitem[Miller(2010)]{miller_did_2010}
+A.~R. Miller.
+\newblock Did the {Airline} {Tariff} {Publishing} {Case} {Reduce} {Collusion}?
+\newblock \emph{The Journal of Law \& Economics}, 53\penalty0 (3):\penalty0
+  569--586, 2010.
+\newblock ISSN 0022-2186.
+\newblock \doi{10.1086/605294}.
+\newblock URL \url{https://www.jstor.org/stable/10.1086/605294}.
+\newblock Publisher: [The University of Chicago Press, The Booth School of
+  Business, University of Chicago, The University of Chicago Law School].
+
+\bibitem[Mooney(2022)]{mooney_southwest_2022}
+M.~Mooney.
+\newblock Southwest {Airlines} offsets rising fuel costs with fuel hedging,
+  Mar. 2022.
+\newblock URL
+  \url{https://www.axios.com/local/atlanta/2022/03/15/southwest-airlines-rising-fuel-costs-fuel-hedging}.
+
+\bibitem[Morrison(2001)]{morrison_actual_2001}
+S.~A. Morrison.
+\newblock Actual, {Adjacent}, and {Potential} {Competition} {Estimating} the
+  {Full} {Effect} of {Southwest} {Airlines}.
+\newblock \emph{Journal of Transport Economics and Policy (JTEP)}, 35\penalty0
+  (2):\penalty0 239--256, May 2001.
+
+\bibitem[Nevo(2001)]{nevo_measuring_2001}
+A.~Nevo.
+\newblock Measuring {Market} {Power} in the {Ready}-to-{Eat} {Cereal}
+  {Industry}.
+\newblock \emph{Econometrica}, 69\penalty0 (2):\penalty0 307--342, 2001.
+\newblock ISSN 1468-0262.
+\newblock \doi{10.1111/1468-0262.00194}.
+\newblock URL
+  \url{https://onlinelibrary.wiley.com/doi/abs/10.1111/1468-0262.00194}.
+\newblock \_eprint:
+  https://onlinelibrary.wiley.com/doi/pdf/10.1111/1468-0262.00194.
+
+\bibitem[Peters(2006)]{peters_evaluating_2006}
+C.~Peters.
+\newblock Evaluating the {Performance} of {Merger} {Simulation}: {Evidence}
+  from the {U}.{S}. {Airline} {Industry}.
+\newblock \emph{The Journal of Law and Economics}, 49\penalty0 (2):\penalty0
+  627--649, Oct. 2006.
+\newblock ISSN 0022-2186.
+\newblock \doi{10.1086/505369}.
+\newblock URL \url{https://www.journals.uchicago.edu/doi/full/10.1086/505369}.
+\newblock Publisher: The University of Chicago Press.
+
+\bibitem[Rains(2023)]{rains_what_2023}
+T.~Rains.
+\newblock What the dissolution of the {Northeast} {Alliance} means for
+  {American} {Airlines} and {JetBlue} customers, July 2023.
+\newblock URL
+  \url{https://www.businessinsider.com/what-ending-american-and-jetblue-northeast-alliance-means-for-customers-2023-7}.
+
+\bibitem[Rennison and Chokshi(2023)]{rennison_jetblue-american_2023}
+J.~Rennison and N.~Chokshi.
+\newblock {JetBlue}-{American} {Partnership} {Struck} {Down} by {Federal}
+  {Judge}.
+\newblock \emph{The New York Times}, May 2023.
+\newblock ISSN 0362-4331.
+\newblock URL
+  \url{https://www.nytimes.com/2023/05/19/business/jetblue-american-northeast-alliance-justice-department.html}.
+
+\bibitem[Schaper and Hernandez(2022)]{schaper_frontier-spirit_2022}
+D.~Schaper and J.~Hernandez.
+\newblock Frontier-{Spirit} merger promises better deals and service; critics
+  aren't so sure.
+\newblock \emph{NPR}, Feb. 2022.
+\newblock URL
+  \url{https://www.npr.org/2022/02/07/1078842162/spirit-frontier-spirit-airlines-merger}.
+
+\bibitem[Semuels(2021)]{semuels_business_2021}
+A.~Semuels.
+\newblock Business {Travel}’s {Demise} {Could} {Have} {Far}-{Reaching}
+  {Consequences}, Oct. 2021.
+\newblock URL \url{https://time.com/6108331/business-travel-decline-covid-19/}.
+
+\bibitem[Shrago(2024)]{shrago_spirit_2024}
+B.~Shrago.
+\newblock The {Spirit} {Effect}: {Ultra}-{Low} {Cost} {Carriers} and {Fare}
+  {Dispersion} in the {U}.{S}. {Airline} {Industry}.
+\newblock \emph{Review of Industrial Organization}, 64\penalty0 (4):\penalty0
+  549--579, June 2024.
+\newblock ISSN 1573-7160.
+\newblock \doi{10.1007/s11151-024-09948-y}.
+\newblock URL \url{https://doi.org/10.1007/s11151-024-09948-y}.
+
+\bibitem[Sider(2024)]{sider_jetblue_2024}
+A.~Sider.
+\newblock {JetBlue} and {Spirit} {Airlines} {Call} {Off} {Merger} {Deal}, Mar.
+  2024.
+\newblock URL
+  \url{https://www.wsj.com/business/airlines/jetblue-airways-scraps-3-8-billion-takeover-of-spirit-airlines-e1d014b0}.
+\newblock Section: Business.
+
+\bibitem[Sipinski(2020)]{sipinski_jetblue_2020}
+D.~Sipinski.
+\newblock {JetBlue} {Airways} defers more {A321neo}({LR}) deliveries, Nov.
+  2020.
+\newblock URL
+  \url{https://www.ch-aviation.com/news/96864-jetblue-airways-defers-more-a321neolr-deliveries}.
+
+\bibitem[Vasel(2016)]{vasel_spirit_2016}
+K.~Vasel.
+\newblock Spirit {Airlines} scores dead last in customer satisfaction, Apr.
+  2016.
+\newblock URL
+  \url{https://money.cnn.com/2016/04/26/pf/best-and-worst-airlines-customer-satisfaction/index.html}.
+
+\bibitem[Windle and Dresner(1995)]{windle_short_1995}
+R.~J. Windle and M.~E. Dresner.
+\newblock The {Short} and {Long} {Run} {Effects} of {Entry} on {U}.{S}.
+  {Domestic} {Air} {Routes}.
+\newblock \emph{Transportation Journal}, 35\penalty0 (2):\penalty0 14--25,
+  1995.
+\newblock ISSN 0041-1612.
+\newblock URL \url{https://www.jstor.org/stable/20713269}.
+\newblock Publisher: Penn State University Press.
+
+\bibitem[Zou et~al.(2023)Zou, Yu, and Friedenzohn]{zou_assessing_2023}
+L.~Zou, C.~Yu, and D.~Friedenzohn.
+\newblock Assessing the impacts of northeast alliance between {American}
+  airlines and {JetBlue} airways.
+\newblock \emph{Transport Policy}, 140:\penalty0 42--53, Sept. 2023.
+\newblock ISSN 0967-070X.
+\newblock \doi{10.1016/j.tranpol.2023.06.011}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S0967070X23001634}.
+
+\end{thebibliography}
